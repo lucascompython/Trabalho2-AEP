@@ -1,0 +1,32 @@
+{
+    "Jarro Tulipas": {
+        "uuid": "9b084dbf-a573-4080-9ad0-6e75276962bc",
+        "preco": 69.0,
+        "quantidade": 10,
+        "categoria": "Jarros"
+    },
+    "Jarro Rosas": {
+        "uuid": "c441bb85-dc66-4db5-a1db-f532f963de99",
+        "preco": 69.0,
+        "quantidade": 10,
+        "categoria": "Jarros"
+    },
+    "Centro Rosas": {
+        "uuid": "13547ec4-094f-44c9-8058-7670622696d8",
+        "preco": 49.9,
+        "quantidade": 200,
+        "categoria": "CentrosMesa"
+    },
+    "Ramos de Rosas": {
+        "uuid": "6bacce49-895e-4a87-8f4f-3585e9b281a8",
+        "preco": 12.99,
+        "quantidade": 4,
+        "categoria": "Ramos"
+    },
+    "Ramo de Tulipas": {
+        "uuid": "d62ce86c-418c-4b7b-91bf-d41c863ca407",
+        "preco": 6.99,
+        "quantidade": 22,
+        "categoria": "Ramos"
+    }
+}

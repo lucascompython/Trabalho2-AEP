@@ -1,0 +1,16 @@
+{
+  "files.associations": {
+    "term_size.h": "c",
+    "stdbool.h": "c",
+    "stdint.h": "c",
+    "stdlib.h": "c",
+    "stdio.h": "c",
+    "cstdlib": "c",
+    "memory_resource": "c",
+    "memory": "c",
+    "new": "c",
+    "uuid.h": "c",
+    "yyjson.h": "c",
+    "main.h": "c"
+  }
+}
