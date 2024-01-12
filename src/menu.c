@@ -252,93 +252,90 @@ void menu_listar(void)
 
 void menu_modificar(void)
 {
-    if (size_artigos == 0)
+    if (size_livros == 0)
     {
         clear_menu();
-        menu_centered_item("Não há artigos para modificar", UNDERLINE, "", 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-#ifdef __unix__ // ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
+        menu_centered_item("Não há livros para modificar", UNDERLINE, "", 0);
+
+        pressione_qualquer_tecla(2);
         menu_principal();
         return;
     }
 
     // use arrow_menu to select an already existing artigo
     // char *artigosOptions[size_artigos];
-    char **artigosOptions = (char **)malloc(sizeof(char *) * size_artigos);
-    if (artigosOptions == NULL)
+    char **livrosOptions = (char **)malloc(sizeof(char *) * size_livros);
+    if (livrosOptions == NULL)
     {
         fprintf(stderr, "Erro: malloc() retornou NULL\n");
         exit(1);
     }
-    for (size_t i = 0; i < size_artigos; i++)
+    for (size_t i = 0; i < size_livros; i++)
     {
-        artigosOptions[i] = artigos[i].nome;
+        livrosOptions[i] = livros[i].titulo;
     }
-    int32_t selectedArtigo = arrow_menu(artigosOptions, size_artigos);
+    int selectedArtigo = arrow_menu(livrosOptions, size_livros);
 
-    char preco[40];
-    char quantidade[40];
-    char nome[40];
+    char isbn[40];
+    char titulo[40];
+    char autor[40];
+    char quantidade_e[40];
+    char quantidade_d[40];
     char categoria[40];
-#ifdef _WIN32
-    sprintf_s(preco, 40, "%.2f", artigos[selectedArtigo].preco);
-    sprintf_s(nome, 40, "%s", artigos[selectedArtigo].nome);
-    sprintf_s(quantidade, 40, "%lld", artigos[selectedArtigo].quantidade);
-    sprintf_s(categoria, 40, "%d", artigos[selectedArtigo].categoria);
 
-#elif __unix__
-    sprintf(preco, "%.2f", artigos[selectedArtigo].preco);
-    sprintf(nome, "%s", artigos[selectedArtigo].nome);
-    sprintf(quantidade, "%ld", artigos[selectedArtigo].quantidade);
-    sprintf(categoria, "%d", artigos[selectedArtigo].categoria);
-#endif
+    sprintf_s(isbn, 40, "%s", livros[selectedArtigo].isbn);
+    sprintf_s(titulo, 40, "%s", livros[selectedArtigo].titulo);
+    sprintf_s(autor, 40, "%s", livros[selectedArtigo].autor);
+    sprintf_s(quantidade_e, 40, "%d", livros[selectedArtigo].quantidade_exemplares);
+    sprintf_s(quantidade_d, 40, "%d", livros[selectedArtigo].quantidade_disponivel);
+    sprintf_s(categoria, 40, "%d", livros[selectedArtigo].categoria);
 
     Input inputItems[] = {
-        {.label = "Nome", .isCheckbox = 0},
-        {.label = "Preço (€)", .isCheckbox = 0},
-        {.label = "Quantidade", .isCheckbox = 0},
-        {.label = "Categoria", .isCheckbox = 1, .checkBoxOptions = {"Ramos", "Arranjos", "Jarros", "CentrosMesa", "OutrasFlores"}},
+        {.label = "Titulo", .input = "", .isCheckbox = 0},
+        {.label = "Autor", .input = "", .isCheckbox = 0},
+        {.label = "ISBN", .input = "", .isCheckbox = 0},
+        {.label = "Quantidade de Examplares", .input = "", .isCheckbox = 0},
+        {.label = "Quantidade Disponivel", .input = "", .isCheckbox = 0},
+        {.label = "Categoria", .input = "", .isCheckbox = 1, .checkBoxOptions = {"Romances", "Ficção", "Aventura", "Terror", "Biografia", "Outros"}},
     };
 
     // Copy the content from your character arrays to the input field
 
-    copy_str(inputItems[0].input, nome, strlen(nome) + 1);
-    copy_str(inputItems[1].input, preco, strlen(preco) + 1);
-    copy_str(inputItems[2].input, quantidade, strlen(quantidade) + 1);
-    copy_str(inputItems[3].input, categoria, strlen(categoria) + 1);
+    copy_str(inputItems[0].input, titulo, strlen(titulo) + 1);
+    copy_str(inputItems[1].input, autor, strlen(autor) + 1);
+    copy_str(inputItems[2].input, isbn, strlen(isbn) + 1);
+    copy_str(inputItems[3].input, quantidade_e, strlen(quantidade_e) + 1);
+    copy_str(inputItems[4].input, quantidade_d, strlen(quantidade_d) + 1);
+    copy_str(inputItems[5].input, categoria, strlen(categoria) + 1);
 
-    int32_t result = input_menu(inputItems, LENGTH(inputItems), 0);
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
     switch (result)
     {
     case 0:
-        copy_str(artigos[selectedArtigo].nome, inputItems[0].input, strlen(inputItems[0].input) + 1);
-        artigos[selectedArtigo].preco = atof(inputItems[1].input);
-        artigos[selectedArtigo].quantidade = atoi(inputItems[2].input);
-        artigos[selectedArtigo].categoria = atoi(inputItems[3].input);
+        copy_str(livros[selectedArtigo].titulo, inputItems[0].input, strlen(inputItems[0].input) + 1);
+        copy_str(livros[selectedArtigo].autor, inputItems[1].input, strlen(inputItems[1].input) + 1);
+        copy_str(livros[selectedArtigo].isbn, inputItems[2].input, strlen(inputItems[2].input) + 1);
+        livros[selectedArtigo].quantidade_exemplares = atoi(inputItems[3].input);
+        livros[selectedArtigo].quantidade_disponivel = atoi(inputItems[4].input);
+        livros[selectedArtigo].categoria = atoi(inputItems[5].input);
 
-        free(artigosOptions);
+        save_livros_array(livros, size_livros, STOCK_JSON_FILE);
+
+        free(livrosOptions);
+
         clear_menu();
         menu_centered_item("Artigo modificado com sucesso!", GREEN, UNDERLINE, 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-#ifdef __unix__ // ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
+
+        pressione_qualquer_tecla(2);
+
         menu_principal();
         break;
     case 1:
-        free(artigosOptions);
+        free(livrosOptions);
         menu_principal();
         break;
     default:
-        free(artigosOptions);
+        free(livrosOptions);
         fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
         exit(1);
     }

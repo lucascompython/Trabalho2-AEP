@@ -34,18 +34,18 @@ void disableRawMode(void)
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
 }
 
-int32_t arrow_menu(char *strings[], int32_t size)
+int arrow_menu(char *strings[], size_t size)
 {
     clear_menu();
     enableRawMode();
 
-    int32_t selectedOption = 0;
-    int32_t totalOptions = size;
+    int selectedOption = 0;
+    int totalOptions = size;
 
     while (1)
     {
         // Print menu options
-        for (int32_t i = 0; i < totalOptions; i++)
+        for (int i = 0; i < totalOptions; i++)
         {
             if (i == selectedOption)
             {
@@ -98,7 +98,7 @@ int32_t arrow_menu(char *strings[], int32_t size)
     }
 }
 
-int32_t input_menu(Input inputItems[], int32_t inputItemsSize, int32_t isVenda)
+int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
 {
     clear_menu();
     enableRawMode();
