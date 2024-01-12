@@ -25,9 +25,9 @@ extern size_t size_livros;      // from src/main.c
 extern Emprestimo *emprestimos; // from src/main.c
 extern size_t size_emprestimos; // from src/main.c
 
-void pressione_qualquer_tecla(void)
+void pressione_qualquer_tecla(int row_offset)
 {
-    menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+    menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", row_offset);
 #ifdef __unix__ // ler "qualquer" teclas no linux
 
     enableRawMode();
@@ -186,7 +186,7 @@ void menu_introduzir_livro(void)
         menu_centered_item("Livro introduzido com sucesso!", GREEN, UNDERLINE, 0);
         menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-        pressione_qualquer_tecla();
+        pressione_qualquer_tecla(3);
 
         menu_principal();
 
@@ -206,50 +206,42 @@ void menu_listar(void)
     {
         clear_menu();
         menu_centered_item("Não há livros para listar", UNDERLINE, "", 0);
-        pressione_qualquer_tecla();
+        pressione_qualquer_tecla(2);
 
         menu_principal();
         return;
     }
 
-    int32_t result = arrow_menu_filter(artigos, size_artigos);
+    int32_t result = arrow_menu_filter(livros, size_livros);
     clear_menu();
 
     // show the selected artigo
     if (result != -1)
     {
-        char preco[40];
-        char quantidade[40];
-        char nome[40];
-        char categoria[40];
-        char uuid[43];
 
-#ifdef _WIN32
-        sprintf_s(preco, 40, "Preço: %.2f", artigos[result].preco);
-        sprintf_s(nome, 40, "Nome: %s", artigos[result].nome);
-        sprintf_s(quantidade, 40, "Quantidade: %lld", artigos[result].quantidade);
-        sprintf_s(categoria, 40, "Categoria: %d", artigos[result].categoria);
-        sprintf_s(uuid, 43, "UUID: %s", artigos[result].uuid);
-#elif __unix__
-        sprintf(preco, "Preço: %.2f", artigos[result].preco);
-        sprintf(nome, "Nome: %s", artigos[result].nome);
-        sprintf(quantidade, "Quantidade: %ld", artigos[result].quantidade);
-        sprintf(categoria, "Categoria: %s", categoria_to_str(artigos[result].categoria));
-        sprintf(uuid, "UUID: %s", artigos[result].uuid);
-#endif
+        char isbn[40];
+        char titulo[40];
+        char autor[40];
+        char quantidade_e[40];
+        char quantidade_d[40];
+        char categoria[40];
+
+        sprintf_s(isbn, 40, "ISBN: %s", livros[result].isbn);
+        sprintf_s(titulo, 40, "Título: %s", livros[result].titulo);
+        sprintf_s(autor, 40, "Autor: %s", livros[result].autor);
+        sprintf_s(quantidade_e, 40, "Quantidade Exemplares: %d", livros[result].quantidade_exemplares);
+        sprintf_s(quantidade_d, 40, "Quantidade Disponível: %d", livros[result].quantidade_disponivel);
+        sprintf_s(categoria, 40, "Categoria: %s", categoria_to_str(livros[result].categoria));
+
         // TODO: Centrar isto melhor verticalmente
-        menu_centered_item(nome, UNDERLINE, "", 0);
-        menu_centered_item(preco, "", "", 1);
-        menu_centered_item(quantidade, "", "", 2);
-        menu_centered_item(categoria, "", "", 3);
-        menu_centered_item(uuid, "", "", 4);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 5);
-#ifdef __unix__ // ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
+        menu_centered_item(isbn, "", "", 0);
+        menu_centered_item(titulo, "", "", 1);
+        menu_centered_item(autor, "", "", 2);
+        menu_centered_item(quantidade_e, "", "", 3);
+        menu_centered_item(quantidade_d, "", "", 4);
+        menu_centered_item(categoria, "", "", 5);
+
+        pressione_qualquer_tecla(7);
         menu_principal();
     }
     else
