@@ -14,11 +14,29 @@
 #include <conio.h> // Para a welcome screen _getch() ler todas as teclas
 #endif
 
+#ifdef __unix__
+// sprintf_s() não existe no linux
+#define sprintf_s(buffer, size, format, ...) sprintf(buffer, format, __VA_ARGS__)
+#endif
+
 extern TerminalSize term_size;  // from src/main.c
 extern Livro *livros;           // from src/main.c
 extern size_t size_livros;      // from src/main.c
 extern Emprestimo *emprestimos; // from src/main.c
 extern size_t size_emprestimos; // from src/main.c
+
+void pressione_qualquer_tecla(void)
+{
+    menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+#ifdef __unix__ // ler "qualquer" teclas no linux
+
+    enableRawMode();
+    getchar();
+    disableRawMode();
+#elif _WIN32
+    _getch(); // ler qualquer tecla no windows
+#endif
+}
 
 void printMenuItem(Input item, int32_t isSelected, int32_t offset)
 {
@@ -141,32 +159,7 @@ void menu_introduzir_livro(void)
     switch (result)
     {
     case 0:
-        // size_artigos++;
-        // artigos = realloc(artigos, sizeof(Artigo) * (size_artigos));
-        // if (artigos == NULL)
-        // {
-        //     fprintf(stderr, "Erro: realloc() retornou NULL\n");
-        //     exit(1);
-        // }
 
-        // artigos[size_artigos - 1].nome = (char *)malloc(sizeof(char) * (strlen(inputItems[0].input) + 1));
-        // if (artigos[size_artigos - 1].nome == NULL)
-        // {
-        //     fprintf(stderr, "Erro: malloc() retornou NULL\n");
-        //     exit(1);
-        // }
-        // copy_str(artigos[size_artigos - 1].nome, inputItems[0].input, strlen(inputItems[0].input) + 1);
-
-        // artigos[size_artigos - 1].preco = atof(inputItems[1].input);
-        // artigos[size_artigos - 1].quantidade = atoi(inputItems[2].input);
-        // artigos[size_artigos - 1].categoria = atoi(inputItems[3].input);
-        // copy_str(artigos[size_artigos - 1].uuid, uuid_gen(), 37);
-
-        // clear_menu();
-        // menu_centered_item("Artigo introduzido com sucesso!", GREEN, UNDERLINE, 0);
-        // menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-
-        // NOVO
         size_livros++;
 
         livros = realloc(livros, sizeof(Livro) * (size_livros));
@@ -193,14 +186,7 @@ void menu_introduzir_livro(void)
         menu_centered_item("Livro introduzido com sucesso!", GREEN, UNDERLINE, 0);
         menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-#ifdef __unix__ // ler "qualquer" teclas no linux
-
-        enableRawMode();
-        getchar();
-        disableRawMode();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
+        pressione_qualquer_tecla();
 
         menu_principal();
 
@@ -216,17 +202,12 @@ void menu_introduzir_livro(void)
 void menu_listar(void)
 {
 
-    if (size_artigos == 0)
+    if (size_livros == 0)
     {
         clear_menu();
-        menu_centered_item("Não há artigos para listar", UNDERLINE, "", 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-#ifdef __unix__ // ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
+        menu_centered_item("Não há livros para listar", UNDERLINE, "", 0);
+        pressione_qualquer_tecla();
+
         menu_principal();
         return;
     }
