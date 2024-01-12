@@ -43,12 +43,7 @@ void welcome_screen(void)
     menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "",
                        1);
 
-#ifdef __unix__ // temos que fazer isto para ler "qualquer" teclas no linux
-    enableRawMode();
-    getchar();
-#elif _WIN32
-    _getch(); // ler qualquer tecla no windows
-#endif
+    pressione_qualquer_tecla(2);
 
     clear_menu();
     menu_principal();

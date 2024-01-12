@@ -34,4 +34,6 @@ void printMenuItem(Input item, int32_t isSelected, int32_t offset);
 void printMenuCheckbox(char *string, int32_t isSelected, int32_t isCheckboxSelected, int32_t offset);
 int arrow_menu_filter(Livro *livros, int size);
 
+void pressione_qualquer_tecla(int row_offset);
+
 #endif // MENU_H
