@@ -296,15 +296,15 @@ int32_t input_menu(Input inputItems[], int32_t inputItemsSize, int32_t isVenda)
 }
 
 // Function that is a arrow menu but when you press 'f' the user can start typing and the menu will filter the options by Artigo.categoria
-int32_t arrow_menu_filter(Artigo *artigos, int32_t size)
+int arrow_menu_filter(Livro *livros, int size)
 {
     // TODO: Resolver bug de ter que clicar varias vezes se items filtrados tiverem separados
     clear_menu();
     enableRawMode();
 
-    int32_t selectedOption = 0;
-    int32_t totalOptions = size;
-    int32_t isFiltering = 0;
+    int selectedOption = 0;
+    int totalOptions = size;
+    int isFiltering = 0;
     char filter[20];
     char c;
     int changed = 0;
@@ -324,22 +324,22 @@ int32_t arrow_menu_filter(Artigo *artigos, int32_t size)
             menu_centered_item("(F)iltrar", UNDERLINE, "", -2);
         }
 
-        for (int32_t i = 0; i < totalOptions; i++)
+        for (int i = 0; i < totalOptions; i++)
         {
             if (i == selectedOption)
             {
-                if (!isFiltering || strstr(categoria_to_str(artigos[i].categoria), filter) != NULL)
+                if (!isFiltering || strstr(livros[i].isbn, filter) != NULL)
                 {
                     printf("\033[7m"); // Invert text color (selected option)
-                    menu_centered_item(artigos[i].nome, "", "", i - (totalOptions / 2) + 1);
+                    menu_centered_item(livros[i].isbn, "", "", i - (totalOptions / 2) + 1);
                     printf("%s\n", RESET); // Reset text color
                 }
             }
             else
             {
-                if (!isFiltering || strstr(categoria_to_str(artigos[i].categoria), filter) != NULL)
+                if (!isFiltering || strstr(livros[i].isbn, filter) != NULL)
                 {
-                    menu_centered_item(artigos[i].nome, "", "", i - (totalOptions / 2) + 1);
+                    menu_centered_item(livros[i].isbn, "", "", i - (totalOptions / 2) + 1);
                     puts("");
                 }
             }
@@ -350,7 +350,7 @@ int32_t arrow_menu_filter(Artigo *artigos, int32_t size)
             int firstMatch = -1;
             for (int i = 0; i < totalOptions; i++)
             {
-                if (strstr(categoria_to_str(artigos[i].categoria), filter) != NULL)
+                if (strstr(livros[i].isbn, filter) != NULL)
                 {
                     firstMatch = i;
                     break;
