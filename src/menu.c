@@ -19,11 +19,12 @@
 #define sprintf_s(buffer, size, format, ...) sprintf(buffer, format, __VA_ARGS__)
 #endif
 
-extern TerminalSize term_size;  // from src/main.c
-extern Livro *livros;           // from src/main.c
-extern size_t size_livros;      // from src/main.c
-extern Emprestimo *emprestimos; // from src/main.c
-extern size_t size_emprestimos; // from src/main.c
+extern TerminalSize term_size;     // from src/main.c
+extern Livro *livros;              // from src/main.c
+extern size_t size_livros;         // from src/main.c
+extern Emprestimo *emprestimos;    // from src/main.c
+extern size_t size_emprestimos;    // from src/main.c
+extern struct tm current_datetime; // from src/main.c
 
 void pressione_qualquer_tecla(int row_offset)
 {
@@ -155,7 +156,7 @@ void menu_introduzir_livro(void)
         {.label = "Categoria", .input = "", .isCheckbox = 1, .checkBoxOptions = {"Romances", "Ficção", "Aventura", "Terror", "Biografia", "Outros"}},
     };
 
-    int32_t result = input_menu(inputItems, LENGTH(inputItems), 0);
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
     switch (result)
     {
     case 0:
@@ -199,6 +200,105 @@ void menu_introduzir_livro(void)
         exit(1);
     }
 }
+
+void menu_introduzir_emprestimo(void)
+{
+    Input inputItems[] = {
+        {.label = "Número de CC", .input = "", .isCheckbox = 0},
+        {.label = "ISBN", .input = "", .isCheckbox = 0}};
+
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
+    switch (result)
+    {
+    case 0:
+
+        int num_cc = atoi(inputItems[0].input);
+
+        // Verificar se o livro existe
+        int livroIndex = -1;
+        for (size_t i = 0; i < size_livros; i++)
+        {
+            if (strcmp(livros[i].isbn, inputItems[1].input) == 0)
+            {
+                livroIndex = i;
+                break;
+            }
+        }
+        if (livroIndex == -1)
+        {
+            clear_menu();
+            menu_centered_item("Livro não encontrado!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            menu_principal();
+            break;
+        }
+
+        // Verificar se o livro está disponivel
+        if (livros[livroIndex].quantidade_disponivel == 0)
+        {
+            clear_menu();
+            menu_centered_item("Livro não disponivel!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            menu_principal();
+            break;
+        }
+
+        // Verificar se o utilizador tem mais de 3 livros emprestados
+        int livros_emprestados = 0;
+        for (size_t i = 0; i < size_emprestimos; i++)
+        {
+            if (emprestimos[i].num_cc == num_cc)
+            {
+                livros_emprestados++;
+            }
+        }
+        if (livros_emprestados >= 3)
+        {
+            clear_menu();
+            menu_centered_item("O utilizador já tem 3 livros emprestados!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            menu_principal();
+            break;
+        }
+
+        size_emprestimos++;
+
+        emprestimos = realloc(emprestimos, sizeof(Emprestimo) * (size_emprestimos));
+        if (emprestimos == NULL)
+        {
+            fprintf(stderr, "Erro: realloc() retornou NULL\n");
+            exit(1);
+        }
+
+        emprestimos[size_emprestimos - 1].num_cc = num_cc;
+        emprestimos[size_emprestimos - 1].livro = &livros[livroIndex];
+
+        clear_menu();
+        menu_centered_item("Emprestimo introduzido com sucesso!", GREEN, UNDERLINE, 0);
+        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+        pressione_qualquer_tecla(3);
+
+        menu_principal();
+
+        break; // fazer case1
+
+    case 1:
+        menu_principal();
+        break;
+
+    default:
+        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
+        exit(1);
+    }
+}
+
 void menu_listar(void)
 {
 
@@ -789,6 +889,103 @@ void menu_simular_vendas(void)
     }
 }
 
+// return 1 se a data for valida, 0 se não for
+int verificar_data(int dia, int mes, int ano)
+{
+
+    if (ano >= 1900 && ano <= 9999)
+    {
+        if (mes >= 1 && mes <= 12)
+        {
+            if (mes == 2)
+            {
+                if (ano % 4 == 0)
+                {
+                    if (dia >= 1 && dia <= 29)
+                    {
+                        return 1;
+                    }
+                }
+                else
+                {
+                    if (dia >= 1 && dia <= 28)
+                    {
+                        return 1;
+                    }
+                }
+            }
+            else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+            {
+                if (dia >= 1 && dia <= 30)
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                if (dia >= 1 && dia <= 31)
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+void mudar_data(void)
+{
+    Input inputItems[] = {
+        {.label = "Dia", .input = "", .isCheckbox = 0},
+        {.label = "Mês", .input = "", .isCheckbox = 0},
+        {.label = "Ano", .input = "", .isCheckbox = 0},
+    };
+
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
+    switch (result)
+    {
+    case 0:
+        int dia = atoi(inputItems[0].input);
+        int mes = atoi(inputItems[1].input);
+        int ano = atoi(inputItems[2].input);
+
+        if (verificar_data(dia, mes, ano) == 0)
+        {
+            clear_menu();
+            menu_centered_item("Data inválida!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            mudar_data();
+            return;
+        }
+
+        // mudar current_datetime
+
+        current_datetime.tm_mday = dia;
+        current_datetime.tm_mon = mes - 1;
+        current_datetime.tm_year = ano - 1900;
+        // TODO ver data json e tal
+
+        clear_menu();
+        menu_centered_item("Data alterada com sucesso!", GREEN, UNDERLINE, 0);
+        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+        pressione_qualquer_tecla(3);
+
+        menu_principal();
+
+        break;
+    case 1:
+        menu_principal();
+        break;
+    default:
+        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
+        exit(1);
+    }
+}
+
 void menu_principal(void)
 {
 
@@ -801,8 +998,8 @@ void menu_principal(void)
         "Estatisticas",
         "Sair"};
 
-    int32_t totalOptions = (int)LENGTH(options);
-    int32_t result = arrow_menu(options, totalOptions);
+    int totalOptions = (int)LENGTH(options);
+    int result = arrow_menu(options, totalOptions);
     clear_menu();
     switch (result)
     {
@@ -810,18 +1007,24 @@ void menu_principal(void)
         menu_introduzir_livro();
         break;
     case 1:
-        menu_listar();
+        menu_introduzir_emprestimo();
         break;
     case 2:
-        menu_modificar();
+        menu_listar();
         break;
     case 3:
-        menu_estatisticas();
+        menu_modificar();
         break;
     case 4:
-        menu_simular_vendas();
+        menu_estatisticas();
         break;
     case 5:
+        menu_simular_vendas();
+        break;
+    case 6:
+        mudar_data();
+        break;
+    case 7:
         return;
         break;
     default:

@@ -34,6 +34,8 @@ size_t size_livros;
 Emprestimo *emprestimos;
 size_t size_emprestimos;
 
+struct tm current_datetime;
+
 void welcome_screen(void)
 {
     clear_menu();
@@ -55,6 +57,8 @@ Introduzir um emprestimo
 Modificar a informação de um livro
 Registar a devolução de um livro
 
+Mudar a data (atual) do sistema
+
 
 Estatisticas
  - Informação de um livro pelo ISBN (como tabela antiga AKA mostrar tudo)
@@ -74,6 +78,10 @@ Estatisticas
 int main(void)
 {
     setlocale(LC_ALL, "Portuguese.UTF8");
+
+    // set current time
+    time_t t = time(NULL);
+    current_datetime = *localtime(&t);
 
 #ifdef _WIN32
     srand((unsigned int)time(NULL)); // seed para o uuid_gen() no Windows

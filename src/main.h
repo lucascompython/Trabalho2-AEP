@@ -33,8 +33,8 @@ typedef struct
   char uuid[37];
   int num_cc;
   int ja_devolvido; // 0 - não devolvido, 1 - devolvido
-  time_t data_emprestimo;
-  time_t data_devolucao;
+  struct tm data_emprestimo;
+  struct tm data_devolucao;
 } Emprestimo;
 
 #endif
