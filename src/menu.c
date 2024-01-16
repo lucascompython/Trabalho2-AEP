@@ -582,6 +582,17 @@ void menu_quantos_livros_emprestados_por_pessoa(void)
 
 void menu_livros_emprestados_entre_datas(void)
 {
+
+    if (size_emprestimos == 0)
+    {
+        clear_menu();
+        menu_centered_item("Não há livros requisitados", UNDERLINE, "", 0);
+
+        pressione_qualquer_tecla(2);
+        menu_principal();
+        return;
+    }
+
     // Contar quantos livros foram emprestados entre duas datas, e quantos deles já foram devolvidos
     Input inputItems[] = {
         {.label = "Dia", .input = "", .isCheckbox = 0},
@@ -655,7 +666,16 @@ void menu_livros_emprestados_entre_datas(void)
 }
 void menu_pessoa_que_requisitou_mais_livros(void)
 {
-    // Apresentar a informação da pessoa que requisitou mais livros e quantos ja devolveu
+
+    if (size_emprestimos == 0)
+    {
+        clear_menu();
+        menu_centered_item("Não há livros requisitados", UNDERLINE, "", 0);
+
+        pressione_qualquer_tecla(2);
+        menu_principal();
+        return;
+    }
 
     int max_requisicoes = 0;
     int index_max_requisicoes = 0;
@@ -685,6 +705,16 @@ void menu_pessoa_que_requisitou_mais_livros(void)
 void menu_livros_requisitados_em_cada_mes(void)
 {
     // Mostrar quantos livros foram requisitados em cada mês de um determinado ano
+
+    if (size_emprestimos == 0)
+    {
+        clear_menu();
+        menu_centered_item("Não há livros requisitados", UNDERLINE, "", 0);
+
+        pressione_qualquer_tecla(2);
+        menu_principal();
+        return;
+    }
 
     Input inputItems[] = {
         {.label = "Ano", .input = "", .isCheckbox = 0},
@@ -745,8 +775,83 @@ void menu_livros_requisitados_em_cada_mes(void)
         exit(1);
     }
 }
-void menu_livros_requisitados_por_categoria(void) {}
-void menu_livros_menos_requisitados(void) {}
+
+typedef struct
+{
+    int num_requisicoes;
+    int index;
+} LivroRequisicoes;
+
+int compare(const void *a, const void *b)
+{
+
+    LivroRequisicoes *a1 = (LivroRequisicoes *)a;
+    LivroRequisicoes *b1 = (LivroRequisicoes *)b;
+
+    if (a1->num_requisicoes == b1->num_requisicoes)
+        return 0;
+    else if (a1->num_requisicoes < b1->num_requisicoes)
+        return -1;
+    else
+        return 1;
+}
+
+void menu_livros_menos_requisitados(void)
+{
+    // Mostrar as informações dos 3 livros menos requisitados
+
+    if (size_livros < 3)
+    {
+        clear_menu();
+        menu_centered_item("Não há livros suficientes para mostrar", RED, UNDERLINE, 0);
+
+        pressione_qualquer_tecla(2);
+        menu_principal();
+        return;
+    }
+
+    LivroRequisicoes *livros_requisicoes = (LivroRequisicoes *)malloc(sizeof(LivroRequisicoes) * size_livros);
+
+    for (size_t i = 0; i < size_livros; i++)
+    {
+        livros_requisicoes[i].num_requisicoes = livros[i].num_requisicoes;
+        livros_requisicoes[i].index = i;
+    }
+
+    qsort(livros_requisicoes, size_livros, sizeof(LivroRequisicoes), compare);
+
+    clear_menu();
+
+    // fazer tabela com os 3 livros menos requisitados mostrando o titulo, autor, categoria, isbn,  e numero de requisicoes
+
+    printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 6, (term_size.columns / 2) - 35, GREEN, UNDERLINE, "Título", RESET);
+    printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 6, (term_size.columns / 2) - 20, GREEN, UNDERLINE, "Autor", RESET);
+    printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 6, (term_size.columns / 2) - 5, GREEN, UNDERLINE, "Categoria", RESET);
+    printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 6, (term_size.columns / 2) + 10, GREEN, UNDERLINE, "ISBN", RESET);
+    printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 6, (term_size.columns / 2) + 25, GREEN, UNDERLINE, "Requisições", RESET);
+
+    for (size_t i = 0; i < 3; i++)
+    {
+        char string[70];
+        sprintf_s(string, 70, "%s", livros[livros_requisicoes[i].index].titulo);
+        printf("\033[%zu;%dH%s%s%s%s", (term_size.rows / 2) - 5 + i, (term_size.columns / 2) - 35, GREEN, UNDERLINE, string, RESET);
+
+        sprintf_s(string, 70, "%s", livros[livros_requisicoes[i].index].autor);
+        printf("\033[%zu;%dH%s%s%s%s", (term_size.rows / 2) - 5 + i, (term_size.columns / 2) - 20, GREEN, UNDERLINE, string, RESET);
+
+        sprintf_s(string, 70, "%s", categoria_to_str(livros[livros_requisicoes[i].index].categoria));
+        printf("\033[%zu;%dH%s%s%s%s", (term_size.rows / 2) - 5 + i, (term_size.columns / 2) - 5, GREEN, UNDERLINE, string, RESET);
+
+        sprintf_s(string, 70, "%s", livros[livros_requisicoes[i].index].isbn);
+        printf("\033[%zu;%dH%s%s%s%s", (term_size.rows / 2) - 5 + i, (term_size.columns / 2) + 10, GREEN, UNDERLINE, string, RESET);
+
+        sprintf_s(string, 70, "%d", livros[livros_requisicoes[i].index].num_requisicoes);
+        printf("\033[%zu;%dH%s%s%s%s", (term_size.rows / 2) - 5 + i, (term_size.columns / 2) + 25, GREEN, UNDERLINE, string, RESET);
+    }
+
+    pressione_qualquer_tecla(7);
+    menu_principal();
+}
 void menu_quebras(void) {}
 
 void menu_estatisticas(void)
@@ -777,16 +882,14 @@ void menu_estatisticas(void)
     case 3:
         menu_livros_requisitados_em_cada_mes();
         break;
+
     case 4:
-        menu_livros_requisitados_por_categoria();
-        break;
-    case 5:
         menu_livros_menos_requisitados();
         break;
-    case 6:
+    case 5:
         menu_quebras();
         break;
-    case 7:
+    case 6:
         menu_principal();
         break;
     default:

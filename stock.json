@@ -1,18 +1,42 @@
 {
-    "6666666666666": {
-        "titulo": "Star Wars",
-        "autor": "George Lukas",
-        "quantidade_exemplares": 420,
-        "quantidade_disponivel": 60,
-        "num_requisicoes": 14,
+    "1111111111111": {
+        "titulo": "Star Wars 1",
+        "autor": "George Lucas",
+        "quantidade_exemplares": 10,
+        "quantidade_disponivel": 10,
+        "num_requisicoes": 6,
         "categoria": "Ficção"
     },
-    "7777777777777": {
+    "2222222222222": {
         "titulo": "Star Wars 2",
-        "autor": "George Lukas",
-        "quantidade_exemplares": 5,
-        "quantidade_disponivel": 6,
-        "num_requisicoes": 2,
-        "categoria": "Terror"
+        "autor": "George Lucas",
+        "quantidade_exemplares": 20,
+        "quantidade_disponivel": 20,
+        "num_requisicoes": 7,
+        "categoria": "Ficção"
+    },
+    "3333333333333": {
+        "titulo": "Star Wars 3",
+        "autor": "George Lucas",
+        "quantidade_exemplares": 30,
+        "quantidade_disponivel": 30,
+        "num_requisicoes": 8,
+        "categoria": "Ficção"
+    },
+    "4444444444444": {
+        "titulo": "Star Wars 4",
+        "autor": "George Lucas",
+        "quantidade_exemplares": 40,
+        "quantidade_disponivel": 40,
+        "num_requisicoes": 9,
+        "categoria": "Ficção"
+    },
+    "5555555555555": {
+        "titulo": "Star Wars 5",
+        "autor": "George Lucas",
+        "quantidade_exemplares": 50,
+        "quantidade_disponivel": 50,
+        "num_requisicoes": 10,
+        "categoria": "Ficção"
     }
 }
