@@ -780,142 +780,6 @@ void menu_estatisticas(void)
         break;
     }
 }
-void menu_simular_vendas(void)
-{
-
-    if (size_artigos == 0)
-    {
-        clear_menu();
-        menu_centered_item("Não há artigos para listar", UNDERLINE, "", 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-
-#ifdef __unix__ // temos que fazer isto para ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-        disableRawMode();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
-        menu_principal();
-        return;
-    }
-
-    // use arrow_menu to select an already existing artigo
-    // char *artigosOptions[size_artigos];
-    char **artigosOptions = (char **)malloc(sizeof(char *) * size_artigos);
-    if (artigosOptions == NULL)
-    {
-        fprintf(stderr, "Erro: malloc() retornou NULL\n");
-        exit(1);
-    }
-    for (size_t i = 0; i < size_artigos; i++)
-    {
-        artigosOptions[i] = artigos[i].nome;
-    }
-    int32_t selectedArtigo = arrow_menu(artigosOptions, size_artigos);
-
-    char preco[40];
-    char quantidade[40];
-    char nome[40];
-    char categoria[40];
-#ifdef _WIN32
-    sprintf_s(preco, 40, "%.2f", artigos[selectedArtigo].preco);
-    sprintf_s(nome, 40, "%s", artigos[selectedArtigo].nome);
-    sprintf_s(quantidade, 40, "%lld", artigos[selectedArtigo].quantidade);
-    sprintf_s(categoria, 40, "%d", artigos[selectedArtigo].categoria);
-
-#elif __unix__
-    sprintf(preco, "%.2f", artigos[selectedArtigo].preco);
-    sprintf(nome, "%s", artigos[selectedArtigo].nome);
-    sprintf(quantidade, "%ld", artigos[selectedArtigo].quantidade);
-    sprintf(categoria, "%d", artigos[selectedArtigo].categoria);
-#endif
-
-    Input inputItems[] = {
-        {.label = "Nome", .isCheckbox = 0},
-        {.label = "Preço (€)", .isCheckbox = 0},
-        {.label = "Quantidade", .isCheckbox = 0},
-        {.label = "Categoria", .isCheckbox = 1, .checkBoxOptions = {"Ramos", "Arranjos", "Jarros", "CentrosMesa", "OutrasFlores"}},
-    };
-
-    // Copy the content from your character arrays to the input field
-
-    copy_str(inputItems[0].input, nome, strlen(nome) + 1);
-    copy_str(inputItems[1].input, preco, strlen(preco) + 1);
-    copy_str(inputItems[2].input, quantidade, strlen(quantidade) + 1);
-    copy_str(inputItems[3].input, categoria, strlen(categoria) + 1);
-
-    int32_t result = input_menu(inputItems, LENGTH(inputItems), 1);
-    switch (result)
-    {
-    case 0:
-        // realloc artigos_vendidos
-        size_artigos_vendidos++;
-        artigos_vendidos = realloc(artigos_vendidos, sizeof(Artigo) * (size_artigos_vendidos));
-        if (artigos_vendidos == NULL)
-        {
-            fprintf(stderr, "Erro: realloc() retornou NULL\n");
-            exit(1);
-        }
-
-        // copy the selected artigo to artigos_vendidos
-        artigos_vendidos[size_artigos_vendidos - 1].nome = (char *)malloc(sizeof(char) * (strlen(artigos[selectedArtigo].nome) + 1));
-        if (artigos_vendidos[size_artigos_vendidos - 1].nome == NULL)
-        {
-            fprintf(stderr, "Erro: malloc() retornou NULL\n");
-            exit(1);
-        }
-
-        copy_str(artigos_vendidos[size_artigos_vendidos - 1].nome, artigos[selectedArtigo].nome, strlen(artigos[selectedArtigo].nome) + 1);
-        artigos_vendidos[size_artigos_vendidos - 1].preco = artigos[selectedArtigo].preco;
-        artigos_vendidos[size_artigos_vendidos - 1].quantidade = atoi(inputItems[2].input);
-        artigos_vendidos[size_artigos_vendidos - 1].categoria = artigos[selectedArtigo].categoria;
-        copy_str(artigos_vendidos[size_artigos_vendidos - 1].uuid, uuid_gen(), 37);
-
-        // subtract the quantity from the selected artigo
-        artigos[selectedArtigo].quantidade -= atoi(inputItems[2].input);
-
-        // save the artigos array to the json file
-        save_artigos_array(artigos, size_artigos, STOCK_JSON_FILE);
-
-        // save the artigos_vendidos array to the json file
-        save_artigos_array(artigos_vendidos, size_artigos_vendidos, VENDAS_JSON_FILE);
-
-        free(artigosOptions);
-        clear_menu();
-
-        menu_centered_item("Venda simulada com sucesso!", GREEN, UNDERLINE, 0);
-        // total a pagar
-
-        char precoTotalStr[40];
-#ifdef __unix__
-        sprintf(precoTotalStr, "Total a pagar: %.2f€\n", artigos_vendidos[size_artigos_vendidos - 1].preco * artigos_vendidos[size_artigos_vendidos - 1].quantidade);
-#elif _WIN32
-        sprintf_s(precoTotalStr, 40, "Total a pagar: %.2f€\n", artigos_vendidos[size_artigos_vendidos - 1].preco * artigos_vendidos[size_artigos_vendidos - 1].quantidade);
-#endif
-        menu_centered_item(precoTotalStr, BOLD, UNDERLINE, 1);
-
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 2);
-#ifdef __unix__ // ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
-        menu_principal();
-        break;
-    case 1:
-        free(artigosOptions);
-        menu_principal();
-        break;
-    default:
-        free(artigosOptions);
-        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
-        exit(1);
-
-        break;
-    }
-}
 
 // return 1 se a data for valida, 0 se não for
 int verificar_data(int dia, int mes, int ano)
@@ -1162,12 +1026,9 @@ void menu_principal(void)
         menu_estatisticas();
         break;
     case 6:
-        menu_simular_vendas();
-        break;
-    case 7:
         mudar_data();
         break;
-    case 8:
+    case 7:
         return;
         break;
     default:
