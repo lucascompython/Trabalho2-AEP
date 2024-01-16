@@ -76,7 +76,6 @@ Estatisticas
 
 int contarEmprestimosPorPessoa(int *index_max_emprestimos)
 {
-    // *pessoas = (PessoaRequisicoes *)malloc(num_emprestimos * sizeof(PessoaRequisicoes));
 
     // Inicializar a matriz de pessoas
     for (size_t i = 0; i < size_emprestimos; i++)

@@ -653,7 +653,35 @@ void menu_livros_emprestados_entre_datas(void)
         exit(1);
     }
 }
-void menu_pessoa_que_requisitou_mais_livros(void) {}
+void menu_pessoa_que_requisitou_mais_livros(void)
+{
+    // Apresentar a informação da pessoa que requisitou mais livros e quantos ja devolveu
+
+    int max_requisicoes = 0;
+    int index_max_requisicoes = 0;
+
+    max_requisicoes = contarEmprestimosPorPessoa(&index_max_requisicoes);
+
+    int livros_devolvidos = 0;
+    for (size_t i = 0; i < size_emprestimos; i++)
+    {
+        if (emprestimos[i].num_cc == pessoas_requisicoes[index_max_requisicoes].num_cc)
+        {
+            if (emprestimos[i].ja_devolvido == 1)
+            {
+                livros_devolvidos++;
+            }
+        }
+    }
+
+    clear_menu();
+    char string[110];
+    sprintf_s(string, 110, "A pessoa que requisitou mais livros foi %d, com %d livros requisitados e %d livros devolvidos", pessoas_requisicoes[index_max_requisicoes].num_cc, max_requisicoes, livros_devolvidos);
+    menu_centered_item(string, GREEN, UNDERLINE, 0);
+
+    pressione_qualquer_tecla(2);
+    menu_principal();
+}
 void menu_livros_requisitados_em_cada_mes(void) {}
 void menu_livros_requisitados_por_categoria(void) {}
 void menu_livros_menos_requisitados(void) {}
@@ -666,7 +694,6 @@ void menu_estatisticas(void)
         "Livros Emprestados Entre Datas",
         "Pessoa Que Requisitou Mais Livros",
         "Livros Requisitados em Cada Mês",
-        "Livros Requisitados por Categoria",
         "Livros Menos Requisitados",
         "Quebras", // Lixo | menu btop filtrar por categoria e total
         "Voltar"};
