@@ -1014,6 +1014,117 @@ void mudar_data(void)
     }
 }
 
+void menu_resgistrar_devolucao(void)
+{
+    Input inputItems[] = {
+        {.label = "Número de CC", .input = "", .isCheckbox = 0},
+        {.label = "ISBN", .input = "", .isCheckbox = 0}};
+
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
+    switch (result)
+    {
+    case 0:
+
+        int num_cc = atoi(inputItems[0].input);
+
+        // Verificar se o livro existe
+        int livroIndex = -1;
+        for (size_t i = 0; i < size_livros; i++)
+        {
+            if (strcmp(livros[i].isbn, inputItems[1].input) == 0)
+            {
+                livroIndex = i;
+                break;
+            }
+        }
+        if (livroIndex == -1)
+        {
+            clear_menu();
+            menu_centered_item("Livro não encontrado!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            menu_principal();
+            break;
+        }
+
+        // Verificar se o utilizador existe
+        int utilizadorIndex = -1;
+        for (size_t i = 0; i < size_emprestimos; i++)
+        {
+            if (emprestimos[i].num_cc == num_cc)
+            {
+                utilizadorIndex = i;
+                break;
+            }
+        }
+        if (utilizadorIndex == -1)
+        {
+            clear_menu();
+            menu_centered_item("Utilizador não encontrado!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            menu_principal();
+            break;
+        }
+
+        // Verificar se o utilizador tem o livro emprestado
+        int emprestimoIndex = -1;
+        for (size_t i = 0; i < size_emprestimos; i++)
+        {
+            if (emprestimos[i].num_cc == num_cc && strcmp(emprestimos[i].livro->isbn, inputItems[1].input) == 0)
+            {
+                emprestimoIndex = i;
+                break;
+            }
+        }
+        if (emprestimoIndex == -1)
+        {
+            clear_menu();
+            menu_centered_item("O utilizador não tem o livro emprestado!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            menu_principal();
+            break;
+        }
+
+        // Verificar se o livro já foi devolvido
+        if (emprestimos[emprestimoIndex].ja_devolvido == 1)
+        {
+            clear_menu();
+            menu_centered_item("O livro já foi devolvido!", RED, UNDERLINE, 0);
+            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+            pressione_qualquer_tecla(3);
+            menu_principal();
+            break;
+        }
+
+        emprestimos[emprestimoIndex].ja_devolvido = 1;
+        emprestimos[emprestimoIndex].data_devolucao = current_datetime;
+
+        livros[livroIndex].quantidade_disponivel++;
+
+        save_livros_array(livros, size_livros, STOCK_JSON_FILE);
+        save_emprestimos_array(emprestimos, size_emprestimos, EMPRESTIMOS_JSON_FILE);
+
+        clear_menu();
+        menu_centered_item("Devolução registada com sucesso!", GREEN, UNDERLINE, 0);
+        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+        pressione_qualquer_tecla(3);
+
+    case 1:
+        menu_principal();
+        break;
+
+    default:
+        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
+        exit(1);
+    }
+}
+
 void menu_principal(void)
 {
 
@@ -1039,21 +1150,24 @@ void menu_principal(void)
         menu_introduzir_emprestimo();
         break;
     case 2:
-        menu_listar_livros();
+        menu_resgistrar_devolucao();
         break;
     case 3:
-        menu_modificar_livro();
+        menu_listar_livros();
         break;
     case 4:
-        menu_estatisticas();
+        menu_modificar_livro();
         break;
     case 5:
-        menu_simular_vendas();
+        menu_estatisticas();
         break;
     case 6:
-        mudar_data();
+        menu_simular_vendas();
         break;
     case 7:
+        mudar_data();
+        break;
+    case 8:
         return;
         break;
     default:
