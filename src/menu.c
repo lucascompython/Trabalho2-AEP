@@ -373,7 +373,7 @@ void menu_listar_livros(void)
     }
 }
 
-void menu_modificar(void)
+void menu_modificar_livro(void)
 {
     if (size_livros == 0)
     {
@@ -404,6 +404,7 @@ void menu_modificar(void)
     char autor[40];
     char quantidade_e[40];
     char quantidade_d[40];
+    char num_requisicoes[40];
     char categoria[40];
 
     sprintf_s(isbn, 40, "%s", livros[selectedArtigo].isbn);
@@ -411,6 +412,7 @@ void menu_modificar(void)
     sprintf_s(autor, 40, "%s", livros[selectedArtigo].autor);
     sprintf_s(quantidade_e, 40, "%d", livros[selectedArtigo].quantidade_exemplares);
     sprintf_s(quantidade_d, 40, "%d", livros[selectedArtigo].quantidade_disponivel);
+    sprintf_s(num_requisicoes, 40, "%d", livros[selectedArtigo].num_requisicoes);
     sprintf_s(categoria, 40, "%d", livros[selectedArtigo].categoria);
 
     Input inputItems[] = {
@@ -419,6 +421,7 @@ void menu_modificar(void)
         {.label = "ISBN", .input = "", .isCheckbox = 0},
         {.label = "Quantidade de Examplares", .input = "", .isCheckbox = 0},
         {.label = "Quantidade Disponivel", .input = "", .isCheckbox = 0},
+        {.label = "Número de Requisições", .input = "", .isCheckbox = 0},
         {.label = "Categoria", .input = "", .isCheckbox = 1, .checkBoxOptions = {"Romances", "Ficção", "Aventura", "Terror", "Biografia", "Outros"}},
     };
 
@@ -429,7 +432,8 @@ void menu_modificar(void)
     copy_str(inputItems[2].input, isbn, strlen(isbn) + 1);
     copy_str(inputItems[3].input, quantidade_e, strlen(quantidade_e) + 1);
     copy_str(inputItems[4].input, quantidade_d, strlen(quantidade_d) + 1);
-    copy_str(inputItems[5].input, categoria, strlen(categoria) + 1);
+    copy_str(inputItems[5].input, num_requisicoes, strlen(num_requisicoes) + 1);
+    copy_str(inputItems[6].input, categoria, strlen(categoria) + 1);
 
     int result = input_menu(inputItems, LENGTH(inputItems), 0);
     switch (result)
@@ -440,7 +444,8 @@ void menu_modificar(void)
         copy_str(livros[selectedArtigo].isbn, inputItems[2].input, strlen(inputItems[2].input) + 1);
         livros[selectedArtigo].quantidade_exemplares = atoi(inputItems[3].input);
         livros[selectedArtigo].quantidade_disponivel = atoi(inputItems[4].input);
-        livros[selectedArtigo].categoria = atoi(inputItems[5].input);
+        livros[selectedArtigo].num_requisicoes = atoi(inputItems[5].input);
+        livros[selectedArtigo].categoria = atoi(inputItems[6].input);
 
         save_livros_array(livros, size_livros, STOCK_JSON_FILE);
 
@@ -1037,7 +1042,7 @@ void menu_principal(void)
         menu_listar_livros();
         break;
     case 3:
-        menu_modificar();
+        menu_modificar_livro();
         break;
     case 4:
         menu_estatisticas();
