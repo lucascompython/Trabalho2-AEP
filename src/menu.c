@@ -996,6 +996,7 @@ void menu_principal(void)
         "Listar Livros (ISBN)",
         "Modificar Livro",
         "Estatisticas",
+        "Mudar Data"
         "Sair"};
 
     int totalOptions = (int)LENGTH(options);

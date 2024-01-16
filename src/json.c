@@ -205,8 +205,16 @@ Emprestimo *get_emprestimos_array(size_t *size_emprestimos, const char *json_fil
 
         int num_cc = yyjson_get_int(yyjson_obj_get(val, "num_cc"));
         int ja_devolvido = yyjson_get_int(yyjson_obj_get(val, "ja_devolvido"));
-        time_t data_emprestimo = yyjson_get_int(yyjson_obj_get(val, "data_emprestimo"));
-        time_t data_devolucao = yyjson_get_int(yyjson_obj_get(val, "data_devolucao"));
+
+        const char *data_emprestimo_str = yyjson_get_str(yyjson_obj_get(val, "data_emprestimo"));
+        const char *data_devolucao_str = yyjson_get_str(yyjson_obj_get(val, "data_devolucao"));
+
+        struct tm data_emprestimo;
+        struct tm data_devolucao;
+
+        // strptime deixou de ser standard em C11
+        sscanf(data_emprestimo_str, "%d-%d-%d", &data_emprestimo.tm_mday, &data_emprestimo.tm_mon, &data_emprestimo.tm_year);
+        sscanf(data_devolucao_str, "%d-%d-%d", &data_devolucao.tm_mday, &data_devolucao.tm_mon, &data_devolucao.tm_year);
 
         copy_str(emprestimos[idx].uuid, uuid, 37);
         emprestimos[idx].num_cc = num_cc;
@@ -303,8 +311,21 @@ void save_emprestimos_array(Emprestimo *emprestimos, size_t size, const char *js
 
         yyjson_mut_val *num_cc = yyjson_mut_int(doc, emprestimos[i].num_cc);
         yyjson_mut_val *ja_devolvido = yyjson_mut_int(doc, emprestimos[i].ja_devolvido);
-        yyjson_mut_val *data_emprestimo = yyjson_mut_int(doc, emprestimos[i].data_emprestimo);
-        yyjson_mut_val *data_devolucao = yyjson_mut_int(doc, emprestimos[i].data_devolucao);
+
+        // save date as str %d-%m-%Y
+        char data_emprestimo[11];
+        char data_devolucao[11];
+        strftime(data_emprestimo, 11, "%d-%m-%Y", &emprestimos[i].data_emprestimo);
+
+        // check if data_devolucao is valid
+        if (emprestimos[i].ja_devolvido)
+        {
+            strftime(data_devolucao, 11, "%d-%m-%Y", &emprestimos[i].data_devolucao);
+        }
+        else
+        {
+            strcpy(data_devolucao, "00-00-0000");
+        }
 
         yyjson_mut_val *livro = yyjson_mut_obj(doc);
 
