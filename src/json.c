@@ -204,8 +204,16 @@ Emprestimo *get_emprestimos_array(size_t *size_emprestimos, const char *json_fil
         struct tm data_devolucao;
 
         // strptime deixou de ser standard em C11
-        sscanf(data_emprestimo_str, "%d-%d-%d", &data_emprestimo.tm_mday, &data_emprestimo.tm_mon, &data_emprestimo.tm_year);
-        sscanf(data_devolucao_str, "%d-%d-%d", &data_devolucao.tm_mday, &data_devolucao.tm_mon, &data_devolucao.tm_year);
+        int d, m, y;
+        sscanf(data_emprestimo_str, "%d-%d-%d", &d, &m, &y);
+        data_emprestimo.tm_mday = d;
+        data_emprestimo.tm_mon = m - 1;
+        data_emprestimo.tm_year = y - 1900;
+
+        sscanf(data_devolucao_str, "%d-%d-%d", &d, &m, &y);
+        data_devolucao.tm_mday = d;
+        data_devolucao.tm_mon = m - 1;
+        data_devolucao.tm_year = y - 1900;
 
         copy_str(emprestimos[idx].uuid, uuid, 37);
         emprestimos[idx].num_cc = num_cc;

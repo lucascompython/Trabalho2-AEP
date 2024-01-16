@@ -1,46 +1,46 @@
 {
-    "1072519e-6031-4346-8802-0632220f9287": {
+    "141c1607-45e4-4213-88e1-dc505105761f": {
         "num_cc": 15063599,
-        "ja_devolvido": 0,
-        "data_emprestimo": "16-05-9624",
-        "data_devolucao": "00-00-0000",
+        "ja_devolvido": 1,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
         "livro": {
             "isbn": "6666666666666",
             "titulo": "Star Wars",
             "autor": "George Lukas",
             "quantidade_exemplares": 420,
-            "quantidade_disponivel": 62,
-            "num_requisicoes": 7,
+            "quantidade_disponivel": 58,
+            "num_requisicoes": 13,
             "categoria": "Ficção"
         }
     },
-    "2770ff77-2b04-4e81-b55c-94a29691da87": {
+    "bdc95ccf-8e52-472f-a3be-c11befaaa0b9": {
         "num_cc": 15063599,
-        "ja_devolvido": 0,
-        "data_emprestimo": "16-05-9624",
-        "data_devolucao": "00-00-0000",
+        "ja_devolvido": 1,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
         "livro": {
-            "isbn": "6666666666666",
-            "titulo": "Star Wars",
+            "isbn": "7777777777777",
+            "titulo": "Star Wars 2",
             "autor": "George Lukas",
-            "quantidade_exemplares": 420,
-            "quantidade_disponivel": 59,
-            "num_requisicoes": 10,
-            "categoria": "Ficção"
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 3,
+            "num_requisicoes": 2,
+            "categoria": "Terror"
         }
     },
-    "6bbd4723-58fd-4670-9246-93011b8fa5ee": {
-        "num_cc": 15063599,
-        "ja_devolvido": 0,
-        "data_emprestimo": "16-05-9624",
-        "data_devolucao": "00-00-0000",
+    "0cb1334a-6c65-4ca0-bdb3-160ee39d0906": {
+        "num_cc": 99999999,
+        "ja_devolvido": 1,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
         "livro": {
             "isbn": "6666666666666",
             "titulo": "Star Wars",
             "autor": "George Lukas",
             "quantidade_exemplares": 420,
-            "quantidade_disponivel": 59,
-            "num_requisicoes": 10,
+            "quantidade_disponivel": 57,
+            "num_requisicoes": 14,
             "categoria": "Ficção"
         }
     }

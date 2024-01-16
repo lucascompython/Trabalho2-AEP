@@ -27,6 +27,51 @@ extern size_t size_emprestimos;                // from src/main.c
 extern struct tm current_datetime;             // from src/main.c
 extern PessoaRequisicoes *pessoas_requisicoes; // from src/main.c
 
+// return 1 se a data for valida, 0 se não for
+int verificar_data(int dia, int mes, int ano)
+{
+
+    if (ano >= 1900 && ano <= 9999)
+    {
+        if (mes >= 1 && mes <= 12)
+        {
+            if (mes == 2)
+            {
+                if (ano % 4 == 0)
+                {
+                    if (dia >= 1 && dia <= 29)
+                    {
+                        return 1;
+                    }
+                }
+                else
+                {
+                    if (dia >= 1 && dia <= 28)
+                    {
+                        return 1;
+                    }
+                }
+            }
+            else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+            {
+                if (dia >= 1 && dia <= 30)
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                if (dia >= 1 && dia <= 31)
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 void pressione_qualquer_tecla(int row_offset)
 {
     menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", row_offset);
@@ -307,6 +352,7 @@ void menu_introduzir_emprestimo(void)
         livros[livroIndex].num_requisicoes++;
 
         save_livros_array(livros, size_livros, STOCK_JSON_FILE);
+        save_emprestimos_array(emprestimos, size_emprestimos, EMPRESTIMOS_JSON_FILE);
 
         clear_menu();
         menu_centered_item("Emprestimo introduzido com sucesso!", GREEN, UNDERLINE, 0);
@@ -534,7 +580,79 @@ void menu_quantos_livros_emprestados_por_pessoa(void)
     }
 }
 
-void menu_livros_emprestados_entre_datas(void) {}
+void menu_livros_emprestados_entre_datas(void)
+{
+    // Contar quantos livros foram emprestados entre duas datas, e quantos deles já foram devolvidos
+    Input inputItems[] = {
+        {.label = "Dia", .input = "", .isCheckbox = 0},
+        {.label = "Mês", .input = "", .isCheckbox = 0},
+        {.label = "Ano", .input = "", .isCheckbox = 0},
+        {.label = "Dia", .input = "", .isCheckbox = 0},
+        {.label = "Mês", .input = "", .isCheckbox = 0},
+        {.label = "Ano", .input = "", .isCheckbox = 0},
+    };
+
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
+    switch (result)
+    {
+    case 0:
+    {
+        int dia1 = atoi(inputItems[0].input);
+        int mes1 = atoi(inputItems[1].input);
+        int ano1 = atoi(inputItems[2].input);
+
+        int dia2 = atoi(inputItems[3].input);
+        int mes2 = atoi(inputItems[4].input);
+        int ano2 = atoi(inputItems[5].input);
+
+        if (verificar_data(dia1, mes1, ano1) == 0 || verificar_data(dia2, mes2, ano2) == 0)
+        {
+            clear_menu();
+            menu_centered_item("Data inválida!", RED, UNDERLINE, 0);
+
+            pressione_qualquer_tecla(2);
+            menu_livros_emprestados_entre_datas();
+            return;
+        }
+
+        int livros_emprestados = 0;
+        int livros_devolvidos = 0;
+        for (size_t i = 0; i < size_emprestimos; i++)
+        {
+            if (emprestimos[i].data_emprestimo.tm_year + 1900 >= ano1 && emprestimos[i].data_emprestimo.tm_year + 1900 <= ano2)
+            {
+                if (emprestimos[i].data_emprestimo.tm_mon + 1 >= mes1 && emprestimos[i].data_emprestimo.tm_mon + 1 <= mes2)
+                {
+                    if (emprestimos[i].data_emprestimo.tm_mday >= dia1 && emprestimos[i].data_emprestimo.tm_mday <= dia2)
+                    {
+                        livros_emprestados++;
+                        if (emprestimos[i].ja_devolvido == 1)
+                        {
+                            livros_devolvidos++;
+                        }
+                    }
+                }
+            }
+        }
+
+        clear_menu();
+        char string[70];
+        sprintf_s(string, 70, "Foram emprestados %d livros, %d deles já foram devolvidos", livros_emprestados, livros_devolvidos);
+        menu_centered_item(string, GREEN, UNDERLINE, 0);
+
+        pressione_qualquer_tecla(2);
+        menu_principal();
+        break;
+    }
+    case 1:
+        menu_principal();
+        break;
+
+    default:
+        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
+        exit(1);
+    }
+}
 void menu_pessoa_que_requisitou_mais_livros(void) {}
 void menu_livros_requisitados_em_cada_mes(void) {}
 void menu_livros_requisitados_por_categoria(void) {}
@@ -586,51 +704,6 @@ void menu_estatisticas(void)
         fprintf(stderr, "Erro: arrow_menu() retornou %d\n", result);
         exit(1);
     }
-}
-
-// return 1 se a data for valida, 0 se não for
-int verificar_data(int dia, int mes, int ano)
-{
-
-    if (ano >= 1900 && ano <= 9999)
-    {
-        if (mes >= 1 && mes <= 12)
-        {
-            if (mes == 2)
-            {
-                if (ano % 4 == 0)
-                {
-                    if (dia >= 1 && dia <= 29)
-                    {
-                        return 1;
-                    }
-                }
-                else
-                {
-                    if (dia >= 1 && dia <= 28)
-                    {
-                        return 1;
-                    }
-                }
-            }
-            else if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
-            {
-                if (dia >= 1 && dia <= 30)
-                {
-                    return 1;
-                }
-            }
-            else
-            {
-                if (dia >= 1 && dia <= 31)
-                {
-                    return 1;
-                }
-            }
-        }
-    }
-
-    return 0;
 }
 
 void mudar_data(void)
@@ -780,6 +853,9 @@ void menu_resgistrar_devolucao(void)
 
         clear_menu();
         menu_centered_item("Devolução registada com sucesso!", GREEN, UNDERLINE, 0);
+        printf("%d\n", emprestimos[emprestimoIndex].data_devolucao.tm_mday);
+        printf("%d\n", emprestimos[emprestimoIndex].data_devolucao.tm_mon);
+        printf("%d\n", emprestimos[emprestimoIndex].data_devolucao.tm_year);
         pressione_qualquer_tecla(2);
     }
     case 1:

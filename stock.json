@@ -3,16 +3,16 @@
         "titulo": "Star Wars",
         "autor": "George Lukas",
         "quantidade_exemplares": 420,
-        "quantidade_disponivel": 59,
-        "num_requisicoes": 10,
+        "quantidade_disponivel": 60,
+        "num_requisicoes": 14,
         "categoria": "Ficção"
     },
     "7777777777777": {
         "titulo": "Star Wars 2",
         "autor": "George Lukas",
         "quantidade_exemplares": 5,
-        "quantidade_disponivel": 5,
-        "num_requisicoes": 0,
+        "quantidade_disponivel": 6,
+        "num_requisicoes": 2,
         "categoria": "Terror"
     }
 }
