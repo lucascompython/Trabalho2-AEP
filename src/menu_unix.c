@@ -15,6 +15,7 @@
 #define ESC 27
 
 extern TerminalSize term_size; // from src/main.c
+extern struct tm current_datetime;
 
 // Function to enable raw mode for terminal input
 void enableRawMode(void)
@@ -34,7 +35,7 @@ void disableRawMode(void)
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
 }
 
-int arrow_menu(char *strings[], size_t size)
+int arrow_menu(char *strings[], size_t size, int is_welcome_screen)
 {
     clear_menu();
     enableRawMode();
@@ -42,8 +43,17 @@ int arrow_menu(char *strings[], size_t size)
     int selectedOption = 0;
     int totalOptions = size;
 
+    char stringData[40];
+    sprintf(stringData, "%0d-%0d-%0d", current_datetime.tm_mday, current_datetime.tm_mon + 1, current_datetime.tm_year + 1900);
+
     while (1)
     {
+
+        if (is_welcome_screen)
+        {
+            menu_centered_item(stringData, GREEN, BOLD, -5);
+        }
+
         // Print menu options
         for (int i = 0; i < totalOptions; i++)
         {

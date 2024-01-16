@@ -411,7 +411,7 @@ void menu_modificar_livro(void)
     {
         livrosOptions[i] = livros[i].titulo;
     }
-    int selectedArtigo = arrow_menu(livrosOptions, size_livros);
+    int selectedArtigo = arrow_menu(livrosOptions, size_livros, 0);
 
     char isbn[40];
     char titulo[40];
@@ -560,7 +560,7 @@ void menu_estatisticas(void)
         "Voltar"};
 
     int totalOptions = (int)LENGTH(options);
-    int result = arrow_menu(options, totalOptions);
+    int result = arrow_menu(options, totalOptions, 0);
 
     switch (result)
     {
@@ -819,7 +819,7 @@ void menu_principal(void)
         "Sair"};
 
     int totalOptions = (int)LENGTH(options);
-    int result = arrow_menu(options, totalOptions);
+    int result = arrow_menu(options, totalOptions, 1);
     clear_menu();
     switch (result)
     {

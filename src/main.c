@@ -155,9 +155,6 @@ int main(void)
     welcome_screen();
     show_cursor(); // Restaurar o cursor ao sair. Não é 'restoreCursor' porque o Windows queixa-se que os paremetros não são os mesmos
 
-    // save_artigos_array(artigos, size_artigos, STOCK_JSON_FILE);
-    // save_artigos_array(artigos_vendidos, size_artigos_vendidos,
-    //                    VENDAS_JSON_FILE);
     save_emprestimos_array(emprestimos, size_emprestimos,
                            EMPRESTIMOS_JSON_FILE);
     save_livros_array(livros, size_livros, STOCK_JSON_FILE);

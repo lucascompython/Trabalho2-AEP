@@ -13,5 +13,35 @@
             "num_requisicoes": 7,
             "categoria": "Ficção"
         }
+    },
+    "2770ff77-2b04-4e81-b55c-94a29691da87": {
+        "num_cc": 15063599,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-05-9624",
+        "data_devolucao": "00-00-0000",
+        "livro": {
+            "isbn": "6666666666666",
+            "titulo": "Star Wars",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 420,
+            "quantidade_disponivel": 59,
+            "num_requisicoes": 10,
+            "categoria": "Ficção"
+        }
+    },
+    "6bbd4723-58fd-4670-9246-93011b8fa5ee": {
+        "num_cc": 15063599,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-05-9624",
+        "data_devolucao": "00-00-0000",
+        "livro": {
+            "isbn": "6666666666666",
+            "titulo": "Star Wars",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 420,
+            "quantidade_disponivel": 59,
+            "num_requisicoes": 10,
+            "categoria": "Ficção"
+        }
     }
 }
