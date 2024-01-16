@@ -158,8 +158,12 @@ int main(void)
     // save_artigos_array(artigos, size_artigos, STOCK_JSON_FILE);
     // save_artigos_array(artigos_vendidos, size_artigos_vendidos,
     //                    VENDAS_JSON_FILE);
+    save_emprestimos_array(emprestimos, size_emprestimos,
+                           EMPRESTIMOS_JSON_FILE);
+    save_livros_array(livros, size_livros, STOCK_JSON_FILE);
+
     free_livros_array(livros, size_livros);
-    free_emprestimos_array(emprestimos, size_emprestimos);
+    free(emprestimos);
     free(pessoas_requisicoes);
 
     menu_centered_item("Obrigado por usar o nosso programa!\n", GREEN, BOLD, 0);

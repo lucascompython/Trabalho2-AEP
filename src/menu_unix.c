@@ -107,30 +107,29 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
 
     int selectedButton = 0;
     int selectedItem = 0;
+    int checkBoxLength = 0;
+    if (inputItems[inputItemsSize - 1].isCheckbox)
+    {
+        checkBoxLength = LENGTH(inputItems[inputItemsSize - 1].checkBoxOptions); // assumindo que a ultima opcao é um checkbox
+    }
 
-    int converted = atoi(inputItems[3].input); // Converter o input para int | Input de checkbox indica a sua posição
+    int converted = atoi(inputItems[inputItemsSize - 1].input); // Converter o input para int | Input de checkbox indica a sua posição
     int selectedCheckbox;
-    if (converted >= 0 && converted <= 5 && strcmp(inputItems[3].input, "") != 0) // Se o input for um numero entre 0 e 4
-        selectedCheckbox = converted;                                             // selectedCheckbox = input
+    if (converted >= 0 && converted <= checkBoxLength && strcmp(inputItems[inputItemsSize - 1].input, "") != 0) // Se o input for um numero entre 0 e 4
+        selectedCheckbox = converted;                                                                           // selectedCheckbox = input
     else
         selectedCheckbox = -1; // -1 = Nenhum selecionado
-
-    int quantidadeMax = 0;
-    if (isVenda)
-    {
-        quantidadeMax = atoi(inputItems[2].input);
-    }
 
     char c;
 
     while (1)
     {
-        if (isVenda) // Mostrar o preco total
-        {
-            char vendaString[40];
-            sprintf(vendaString, "Total: %.2f€", atof(inputItems[1].input) * atof(inputItems[2].input));
-            menu_centered_item(vendaString, UNDERLINE, "", -5);
-        }
+        // if (isVenda) // Mostrar o preco total
+        // {
+        //     char vendaString[40];
+        //     sprintf(vendaString, "Total: %.2f€", atof(inputItems[1].input) * atof(inputItems[2].input));
+        //     menu_centered_item(vendaString, UNDERLINE, "", -5);
+        // }
 
         for (int i = 0; i < inputItemsSize; i++)
         {
@@ -145,34 +144,33 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
                 {
 
                     printMenuItem(inputItems[i], 0, (i + 1) - inputItemsSize);
-                    printf("ola");
                 }
 
-                for (int j = 0; j < (int)LENGTH(inputItems[i].checkBoxOptions); j++)
+                for (int j = 0; j < checkBoxLength; j++)
                 {
-                    printf("SELECTED ITEM: %d\n", selectedItem);
 
                     if (j == selectedCheckbox)
                     {
-                        if (selectedItem > 5 && selectedItem == j + 6)
+                        if (selectedItem > inputItemsSize - 1 && selectedItem == j + checkBoxLength)
                         {
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 1, i - (inputItemsSize / 2) + j - 1);
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 1, (i + 1) - inputItemsSize + j + 1);
                         }
                         else
                         {
 
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 1, i - (inputItemsSize / 2) + j - 1);
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 1, (i + 1) - inputItemsSize + j + 1);
                         }
                     }
                     else
                     {
-                        if (selectedItem > 5 && selectedItem == j + 6)
+                        if (selectedItem > inputItemsSize - 1 && selectedItem == j + checkBoxLength)
                         {
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 0, i - (inputItemsSize / 2) + j - 1);
+
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 0, (i + 1) - inputItemsSize + j + 1);
                         }
                         else
                         {
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 0, i - (inputItemsSize / 2) + j - 1);
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 0, (i + 1) - inputItemsSize + j + 1);
                         }
                     }
                 }
@@ -181,11 +179,11 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
 
             if (i == selectedItem)
             {
-                printMenuItem(inputItems[i], 1, i - ((inputItemsSize + 6) / 2) + 1);
+                printMenuItem(inputItems[i], 1, i - (inputItemsSize) + 1);
             }
             else
             {
-                printMenuItem(inputItems[i], 0, i - ((inputItemsSize + 6) / 2) + 1);
+                printMenuItem(inputItems[i], 0, i - (inputItemsSize) + 1);
             }
         }
 
@@ -207,14 +205,16 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
             c = getchar(); // Read the A, B, C, or D
             if (c == 'A')  // Up Arrow
             {
+                // int length = LENGTH(inputItems[inputItemsSize - 1].checkBoxOptions);
                 if (selectedItem > 0)
                     selectedItem--;
                 else
-                    selectedItem = inputItemsSize + 6 - 1; // Voltar ao fim
+                    selectedItem = inputItemsSize + checkBoxLength - 1; // Voltar ao fim
             }
             else if (c == 'B') // Down Arrow
             {
-                if (selectedItem < inputItemsSize + 6 - 1)
+                // int length = LENGTH(inputItems[inputItemsSize - 1].checkBoxOptions);
+                if (selectedItem < inputItemsSize + checkBoxLength - 1)
                     selectedItem++;
                 else
                     selectedItem = 0; // Voltar ao inicio
@@ -263,28 +263,43 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
 
                 if (strlen(inputItems[selectedItem].input) < maxInputSize - 1)
                 {
+                    if (strcmp(inputItems[selectedItem].label, "ISBN") == 0) // so pode ser numero e ter 13 digitos
+                    {
+                        if (isdigit(c) == 0 || strlen(inputItems[selectedItem].input) == 13)
+                        {
+                            continue;
+                        }
+                    }
+                    else if (strcmp(inputItems[selectedItem].label, "Número de CC") == 0) // so pode ser num cc e ter 8 digitos
+                    {
+                        if (isdigit(c) == 0 || strlen(inputItems[selectedItem].input) == 8)
+                        {
+                            continue;
+                        }
+                    }
                     inputItems[selectedItem].input[strlen(inputItems[selectedItem].input)] = c;
                     // inputItems[selectedItem].input[strlen(inputItems[selectedItem].input)] = '*';
                     // strncat(inputItems[selectedItem].input, &c, 1);
                 }
-                if (isVenda && selectedItem == 2)
-                {
-                    int userInput = atoi(inputItems[2].input);
-                    if (userInput > quantidadeMax)
-                    {
-                        char quantidadeMaxString[40];
-                        sprintf(quantidadeMaxString, "%d", quantidadeMax);
-                        copy_str(inputItems[2].input, quantidadeMaxString, 40);
-                    }
-                }
+                // if (isVenda && selectedItem == 2)
+                // {
+                //     int userInput = atoi(inputItems[2].input);
+                //     if (userInput > quantidadeMax)
+                //     {
+                //         char quantidadeMaxString[40];
+                //         sprintf(quantidadeMaxString, "%d", quantidadeMax);
+                //         copy_str(inputItems[2].input, quantidadeMaxString, 40);
+                //     }
+                // }
             }
         }
         if (c == 32) // Barra de espaço
         {
-            if (selectedItem > 4 && !isVenda)
+            if (selectedItem > inputItemsSize - 1 && !isVenda)
             {
-                selectedCheckbox = selectedItem - 6;
-                sprintf(inputItems[5].input, "%d", selectedCheckbox);
+                int length = LENGTH(inputItems[selectedItem].checkBoxOptions);
+                selectedCheckbox = selectedItem - length;
+                sprintf(inputItems[inputItemsSize - 1].input, "%d", selectedCheckbox);
             }
         }
 

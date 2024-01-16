@@ -1,1 +1,17 @@
-{}
+{
+    "1072519e-6031-4346-8802-0632220f9287": {
+        "num_cc": 15063599,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-05-9624",
+        "data_devolucao": "00-00-0000",
+        "livro": {
+            "isbn": "6666666666666",
+            "titulo": "Star Wars",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 420,
+            "quantidade_disponivel": 62,
+            "num_requisicoes": 7,
+            "categoria": "Ficção"
+        }
+    }
+}

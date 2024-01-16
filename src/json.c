@@ -68,17 +68,6 @@ void free_livros_array(Livro *livros, size_t size)
     free(livros);
 }
 
-void free_emprestimos_array(Emprestimo *emprestimos, size_t size)
-{
-    for (size_t i = 0; i < size; i++)
-    {
-        free(emprestimos[i].livro->titulo);
-        free(emprestimos[i].livro->autor);
-        free(emprestimos[i].livro);
-    }
-    free(emprestimos);
-}
-
 void copy_str(char *dest, const char *src, size_t size)
 {
 #ifdef __unix__
@@ -275,10 +264,9 @@ void save_livros_array(Livro *livros, size_t size, const char *json_file)
 {
     yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
     yyjson_mut_val *root = yyjson_mut_obj(doc);
-
     for (size_t i = 0; i < size; i++)
     {
-        yyjson_mut_val *key = yyjson_mut_strn(doc, livros[i].isbn, 14);
+        yyjson_mut_val *key = yyjson_mut_strn(doc, livros[i].isbn, strlen(livros[i].isbn));
         yyjson_mut_val *obj = yyjson_mut_obj(doc);
 
         yyjson_mut_val *titulo = yyjson_mut_strn(doc, livros[i].titulo, strlen(livros[i].titulo));
@@ -299,7 +287,6 @@ void save_livros_array(Livro *livros, size_t size, const char *json_file)
     }
 
     yyjson_mut_doc_set_root(doc, root);
-
     yyjson_mut_write_file(json_file, doc, YYJSON_WRITE_PRETTY, NULL, NULL);
     yyjson_mut_doc_free(doc);
 }
@@ -312,7 +299,7 @@ void save_emprestimos_array(Emprestimo *emprestimos, size_t size, const char *js
 
     for (size_t i = 0; i < size; i++)
     {
-        yyjson_mut_val *key = yyjson_mut_strn(doc, emprestimos[i].uuid, 37);
+        yyjson_mut_val *key = yyjson_mut_strn(doc, emprestimos[i].uuid, strlen(emprestimos[i].uuid));
         yyjson_mut_val *obj = yyjson_mut_obj(doc);
 
         yyjson_mut_val *num_cc = yyjson_mut_int(doc, emprestimos[i].num_cc);
@@ -338,7 +325,7 @@ void save_emprestimos_array(Emprestimo *emprestimos, size_t size, const char *js
 
         yyjson_mut_val *livro = yyjson_mut_obj(doc);
 
-        yyjson_mut_val *isbn = yyjson_mut_strn(doc, emprestimos[i].livro->isbn, 14);
+        yyjson_mut_val *isbn = yyjson_mut_strn(doc, emprestimos[i].livro->isbn, strlen(emprestimos[i].livro->isbn));
         yyjson_mut_val *titulo = yyjson_mut_strn(doc, emprestimos[i].livro->titulo, strlen(emprestimos[i].livro->titulo));
         yyjson_mut_val *autor = yyjson_mut_strn(doc, emprestimos[i].livro->autor, strlen(emprestimos[i].livro->autor));
         yyjson_mut_val *quantidade_exemplares = yyjson_mut_int(doc, emprestimos[i].livro->quantidade_exemplares);

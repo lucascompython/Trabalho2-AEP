@@ -1,1 +1,18 @@
-{}
+{
+    "6666666666666": {
+        "titulo": "Star Wars",
+        "autor": "George Lukas",
+        "quantidade_exemplares": 420,
+        "quantidade_disponivel": 59,
+        "num_requisicoes": 10,
+        "categoria": "Ficção"
+    },
+    "7777777777777": {
+        "titulo": "Star Wars 2",
+        "autor": "George Lukas",
+        "quantidade_exemplares": 5,
+        "quantidade_disponivel": 5,
+        "num_requisicoes": 0,
+        "categoria": "Terror"
+    }
+}

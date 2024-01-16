@@ -188,11 +188,12 @@ void menu_introduzir_livro(void)
 
         copy_str(livros[size_livros - 1].titulo, inputItems[0].input, strlen(inputItems[0].input) + 1);
         copy_str(livros[size_livros - 1].autor, inputItems[1].input, strlen(inputItems[1].input) + 1);
-        copy_str(livros[size_livros - 1].isbn, inputItems[1].input, 14);
+        copy_str(livros[size_livros - 1].isbn, inputItems[2].input, 14);
 
-        livros[size_livros - 1].quantidade_exemplares = atoi(inputItems[2].input);
-        livros[size_livros - 1].quantidade_disponivel = atoi(inputItems[3].input);
-        livros[size_livros - 1].categoria = atoi(inputItems[4].input);
+        livros[size_livros - 1].quantidade_exemplares = atoi(inputItems[3].input);
+        livros[size_livros - 1].quantidade_disponivel = atoi(inputItems[4].input);
+        livros[size_livros - 1].categoria = atoi(inputItems[5].input);
+        livros[size_livros - 1].num_requisicoes = 0;
 
         clear_menu();
         menu_centered_item("Livro introduzido com sucesso!", GREEN, UNDERLINE, 0);
@@ -294,6 +295,7 @@ void menu_introduzir_emprestimo(void)
         emprestimos[size_emprestimos - 1].livro = &livros[livroIndex];
         emprestimos[size_emprestimos - 1].ja_devolvido = 0;
         emprestimos[size_emprestimos - 1].data_emprestimo = current_datetime;
+
         // guardar a data de de devolução como 00-00-0000
         struct tm data_devolucao = {0};
         int dia, mes, ano;
@@ -433,7 +435,7 @@ void menu_modificar_livro(void)
         {.label = "ISBN", .input = "", .isCheckbox = 0},
         {.label = "Quantidade de Examplares", .input = "", .isCheckbox = 0},
         {.label = "Quantidade Disponivel", .input = "", .isCheckbox = 0},
-        {.label = "Número de Requisições", .input = "", .isCheckbox = 0},
+        // {.label = "Número de Requisições", .input = "", .isCheckbox = 0},
         {.label = "Categoria", .input = "", .isCheckbox = 1, .checkBoxOptions = {"Romances", "Ficção", "Aventura", "Terror", "Biografia", "Outros"}},
     };
 
@@ -444,8 +446,8 @@ void menu_modificar_livro(void)
     copy_str(inputItems[2].input, isbn, strlen(isbn) + 1);
     copy_str(inputItems[3].input, quantidade_e, strlen(quantidade_e) + 1);
     copy_str(inputItems[4].input, quantidade_d, strlen(quantidade_d) + 1);
-    copy_str(inputItems[5].input, num_requisicoes, strlen(num_requisicoes) + 1);
-    copy_str(inputItems[6].input, categoria, strlen(categoria) + 1);
+    // copy_str(inputItems[5].input, num_requisicoes, strlen(num_requisicoes) + 1);
+    copy_str(inputItems[5].input, categoria, strlen(categoria) + 1);
 
     int result = input_menu(inputItems, LENGTH(inputItems), 0);
     switch (result)
@@ -456,8 +458,8 @@ void menu_modificar_livro(void)
         copy_str(livros[selectedArtigo].isbn, inputItems[2].input, strlen(inputItems[2].input) + 1);
         livros[selectedArtigo].quantidade_exemplares = atoi(inputItems[3].input);
         livros[selectedArtigo].quantidade_disponivel = atoi(inputItems[4].input);
-        livros[selectedArtigo].num_requisicoes = atoi(inputItems[5].input);
-        livros[selectedArtigo].categoria = atoi(inputItems[6].input);
+        // livros[selectedArtigo].num_requisicoes = atoi(inputItems[5].input);
+        livros[selectedArtigo].categoria = atoi(inputItems[5].input);
 
         save_livros_array(livros, size_livros, STOCK_JSON_FILE);
 
