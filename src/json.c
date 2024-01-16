@@ -144,6 +144,7 @@ Livro *get_livros_array(size_t *size_livros, const char *json_file)
 
         int quantidade_exemplares = yyjson_get_int(yyjson_obj_get(val, "quantidade_exemplares"));
         int quantidade_disponivel = yyjson_get_int(yyjson_obj_get(val, "quantidade_disponivel"));
+        int num_requisicoes = yyjson_get_int(yyjson_obj_get(val, "num_requisicoes"));
         const char *categoria = yyjson_get_str(yyjson_obj_get(val, "categoria"));
 
         size_t titulo_size = strlen(titulo) + 1;
@@ -169,6 +170,7 @@ Livro *get_livros_array(size_t *size_livros, const char *json_file)
 
         livros[idx].quantidade_exemplares = quantidade_exemplares;
         livros[idx].quantidade_disponivel = quantidade_disponivel;
+        livros[idx].num_requisicoes = num_requisicoes;
         livros[idx].categoria = str_to_categoria(categoria);
     }
     yyjson_doc_free(doc);
@@ -229,6 +231,7 @@ Emprestimo *get_emprestimos_array(size_t *size_emprestimos, const char *json_fil
         const char *autor = yyjson_get_str(yyjson_obj_get(livro, "autor"));
         int quantidade_exemplares = yyjson_get_int(yyjson_obj_get(livro, "quantidade_exemplares"));
         int quantidade_disponivel = yyjson_get_int(yyjson_obj_get(livro, "quantidade_disponivel"));
+        int num_requisicoes = yyjson_get_int(yyjson_obj_get(livro, "num_requisicoes"));
         const char *categoria = yyjson_get_str(yyjson_obj_get(livro, "categoria"));
 
         size_t titulo_size = strlen(titulo) + 1;
@@ -261,6 +264,7 @@ Emprestimo *get_emprestimos_array(size_t *size_emprestimos, const char *json_fil
 
         emprestimos[idx].livro->quantidade_exemplares = quantidade_exemplares;
         emprestimos[idx].livro->quantidade_disponivel = quantidade_disponivel;
+        emprestimos[idx].livro->num_requisicoes = num_requisicoes;
         emprestimos[idx].livro->categoria = str_to_categoria(categoria);
     }
     yyjson_doc_free(doc);
@@ -281,12 +285,14 @@ void save_livros_array(Livro *livros, size_t size, const char *json_file)
         yyjson_mut_val *autor = yyjson_mut_strn(doc, livros[i].autor, strlen(livros[i].autor));
         yyjson_mut_val *quantidade_exemplares = yyjson_mut_int(doc, livros[i].quantidade_exemplares);
         yyjson_mut_val *quantidade_disponivel = yyjson_mut_int(doc, livros[i].quantidade_disponivel);
+        yyjson_mut_val *num_requisicoes = yyjson_mut_int(doc, livros[i].num_requisicoes);
         yyjson_mut_val *categoria = yyjson_mut_strn(doc, categoria_to_str(livros[i].categoria), strlen(categoria_to_str(livros[i].categoria)));
 
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "titulo"), titulo);
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "autor"), autor);
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "quantidade_exemplares"), quantidade_exemplares);
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "quantidade_disponivel"), quantidade_disponivel);
+        yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "num_requisicoes"), num_requisicoes);
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "categoria"), categoria);
 
         yyjson_mut_obj_add(root, key, obj);
@@ -334,6 +340,7 @@ void save_emprestimos_array(Emprestimo *emprestimos, size_t size, const char *js
         yyjson_mut_val *autor = yyjson_mut_strn(doc, emprestimos[i].livro->autor, strlen(emprestimos[i].livro->autor));
         yyjson_mut_val *quantidade_exemplares = yyjson_mut_int(doc, emprestimos[i].livro->quantidade_exemplares);
         yyjson_mut_val *quantidade_disponivel = yyjson_mut_int(doc, emprestimos[i].livro->quantidade_disponivel);
+        yyjson_mut_val *num_requisicoes = yyjson_mut_int(doc, emprestimos[i].livro->num_requisicoes);
         yyjson_mut_val *categoria = yyjson_mut_strn(doc, categoria_to_str(emprestimos[i].livro->categoria), strlen(categoria_to_str(emprestimos[i].livro->categoria)));
 
         yyjson_mut_obj_add(livro, yyjson_mut_str(doc, "isbn"), isbn);
@@ -341,6 +348,7 @@ void save_emprestimos_array(Emprestimo *emprestimos, size_t size, const char *js
         yyjson_mut_obj_add(livro, yyjson_mut_str(doc, "autor"), autor);
         yyjson_mut_obj_add(livro, yyjson_mut_str(doc, "quantidade_exemplares"), quantidade_exemplares);
         yyjson_mut_obj_add(livro, yyjson_mut_str(doc, "quantidade_disponivel"), quantidade_disponivel);
+        yyjson_mut_obj_add(livro, yyjson_mut_str(doc, "num_requisicoes"), num_requisicoes);
         yyjson_mut_obj_add(livro, yyjson_mut_str(doc, "categoria"), categoria);
 
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "num_cc"), num_cc);
