@@ -43,8 +43,6 @@ void welcome_screen(void)
 
     menu_centered_item("Bem vindo ao sistema de gestão de emprestimos", GREEN, BOLD,
                        0);
-    menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "",
-                       1);
 
     pressione_qualquer_tecla(2);
 

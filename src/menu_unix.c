@@ -110,7 +110,7 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
 
     int converted = atoi(inputItems[3].input); // Converter o input para int | Input de checkbox indica a sua posição
     int selectedCheckbox;
-    if (converted >= 0 && converted <= 4 && strcmp(inputItems[3].input, "") != 0) // Se o input for um numero entre 0 e 4
+    if (converted >= 0 && converted <= 5 && strcmp(inputItems[3].input, "") != 0) // Se o input for um numero entre 0 e 4
         selectedCheckbox = converted;                                             // selectedCheckbox = input
     else
         selectedCheckbox = -1; // -1 = Nenhum selecionado
@@ -139,40 +139,40 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
             {
                 if (i == selectedItem)
                 {
-                    printMenuItem(inputItems[i], 1, (i + 1) - ((inputItemsSize + 5) / 2));
+                    printMenuItem(inputItems[i], 1, (i + 1) - inputItemsSize);
                 }
                 else
                 {
 
-                    printMenuItem(inputItems[i], 0, (i + 1) - ((inputItemsSize + 5) / 2));
+                    printMenuItem(inputItems[i], 0, (i + 1) - inputItemsSize);
+                    printf("ola");
                 }
 
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < (int)LENGTH(inputItems[i].checkBoxOptions); j++)
                 {
+                    printf("SELECTED ITEM: %d\n", selectedItem);
 
                     if (j == selectedCheckbox)
                     {
-                        if (selectedItem > 3 && selectedItem == j + 4)
+                        if (selectedItem > 5 && selectedItem == j + 6)
                         {
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 1, i - (inputItemsSize / 2) + j);
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 1, i - (inputItemsSize / 2) + j - 1);
                         }
                         else
                         {
 
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 1, i - (inputItemsSize / 2) + j);
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 1, i - (inputItemsSize / 2) + j - 1);
                         }
                     }
                     else
                     {
-                        if (selectedItem > 3 && selectedItem == j + 4)
+                        if (selectedItem > 5 && selectedItem == j + 6)
                         {
-
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 0, i - (inputItemsSize / 2) + j);
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 1, 0, i - (inputItemsSize / 2) + j - 1);
                         }
                         else
                         {
-
-                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 0, i - (inputItemsSize / 2) + j);
+                            printMenuCheckbox(inputItems[i].checkBoxOptions[j], 0, 0, i - (inputItemsSize / 2) + j - 1);
                         }
                     }
                 }
@@ -181,11 +181,11 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
 
             if (i == selectedItem)
             {
-                printMenuItem(inputItems[i], 1, i - ((inputItemsSize + 5) / 2) + 1);
+                printMenuItem(inputItems[i], 1, i - ((inputItemsSize + 6) / 2) + 1);
             }
             else
             {
-                printMenuItem(inputItems[i], 0, i - ((inputItemsSize + 5) / 2) + 1);
+                printMenuItem(inputItems[i], 0, i - ((inputItemsSize + 6) / 2) + 1);
             }
         }
 
@@ -210,11 +210,11 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
                 if (selectedItem > 0)
                     selectedItem--;
                 else
-                    selectedItem = inputItemsSize + 5 - 1; // Voltar ao fim
+                    selectedItem = inputItemsSize + 6 - 1; // Voltar ao fim
             }
             else if (c == 'B') // Down Arrow
             {
-                if (selectedItem < inputItemsSize + 5 - 1)
+                if (selectedItem < inputItemsSize + 6 - 1)
                     selectedItem++;
                 else
                     selectedItem = 0; // Voltar ao inicio
@@ -281,10 +281,10 @@ int input_menu(Input inputItems[], int inputItemsSize, int isVenda)
         }
         if (c == 32) // Barra de espaço
         {
-            if (selectedItem > 3 && !isVenda)
+            if (selectedItem > 4 && !isVenda)
             {
-                selectedCheckbox = selectedItem - 4;
-                sprintf(inputItems[3].input, "%d", selectedCheckbox);
+                selectedCheckbox = selectedItem - 6;
+                sprintf(inputItems[5].input, "%d", selectedCheckbox);
             }
         }
 

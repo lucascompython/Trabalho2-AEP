@@ -151,6 +151,7 @@ void menu_introduzir_livro(void)
 
     Input inputItems[] = {
         {.label = "Titulo", .input = "", .isCheckbox = 0},
+        {.label = "Autor", .input = "", .isCheckbox = 0},
         {.label = "ISBN", .input = "", .isCheckbox = 0},
         {.label = "Quantidade de Examplares", .input = "", .isCheckbox = 0},
         {.label = "Quantidade Disponivel", .input = "", .isCheckbox = 0},
@@ -177,7 +178,16 @@ void menu_introduzir_livro(void)
             fprintf(stderr, "Erro: malloc() retornou NULL\n");
             exit(1);
         }
+
+        livros[size_livros - 1].autor = (char *)malloc(sizeof(char) * (strlen(inputItems[1].input) + 1));
+        if (livros[size_livros - 1].autor == NULL)
+        {
+            fprintf(stderr, "Erro: malloc() retornou NULL\n");
+            exit(1);
+        }
+
         copy_str(livros[size_livros - 1].titulo, inputItems[0].input, strlen(inputItems[0].input) + 1);
+        copy_str(livros[size_livros - 1].autor, inputItems[1].input, strlen(inputItems[1].input) + 1);
         copy_str(livros[size_livros - 1].isbn, inputItems[1].input, 14);
 
         livros[size_livros - 1].quantidade_exemplares = atoi(inputItems[2].input);
