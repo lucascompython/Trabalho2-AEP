@@ -682,7 +682,96 @@ void menu_pessoa_que_requisitou_mais_livros(void)
     pressione_qualquer_tecla(2);
     menu_principal();
 }
-void menu_livros_requisitados_em_cada_mes(void) {}
+void menu_livros_requisitados_em_cada_mes(void)
+{
+    // Mostrar quantos livros foram requisitados em cada mês de um determinado ano
+
+    Input inputItems[] = {
+        {.label = "Ano", .input = "", .isCheckbox = 0},
+    };
+
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
+    switch (result)
+    {
+    case 0:
+    {
+        int ano = atoi(inputItems[0].input);
+
+        if (verificar_data(1, 1, ano) == 0)
+        {
+            clear_menu();
+            menu_centered_item("Data inválida!", RED, UNDERLINE, 0);
+
+            pressione_qualquer_tecla(2);
+            menu_livros_requisitados_em_cada_mes();
+            return;
+        }
+
+        int livros_requisitados[12] = {0};
+
+        for (size_t i = 0; i < size_emprestimos; i++)
+        {
+            if (emprestimos[i].data_emprestimo.tm_year + 1900 == ano)
+            {
+                livros_requisitados[emprestimos[i].data_emprestimo.tm_mon]++;
+            }
+        }
+
+        clear_menu();
+        // char string[70];
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Janeiro", livros_requisitados[0]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 0);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Fevereiro", livros_requisitados[1]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 1);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Março", livros_requisitados[2]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 2);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Abril", livros_requisitados[3]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 3);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Maio", livros_requisitados[4]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 4);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Junho", livros_requisitados[5]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 5);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Julho", livros_requisitados[6]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 6);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Agosto", livros_requisitados[7]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 7);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Setembro", livros_requisitados[8]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 8);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Outubro", livros_requisitados[9]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 9);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Novembro", livros_requisitados[10]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 10);
+        // sprintf_s(string, 70, "Foram requisitados %d livros em Dezembro", livros_requisitados[11]);
+        // menu_centered_item(string, GREEN, UNDERLINE, 11);
+
+        // fazer tabela
+
+        char *meses[] = {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                         "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"};
+
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 6, (term_size.columns / 2) - 10, GREEN, UNDERLINE, "Mês", RESET);
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 6, (term_size.columns / 2) + 10, GREEN, UNDERLINE, "Livros Requisitados", RESET);
+        for (size_t i = 0; i < 12; i++)
+        {
+            char string[70];
+            sprintf_s(string, 70, "%d", livros_requisitados[i]);
+            printf("\033[%zu;%dH%s%s%s%s", (term_size.rows / 2) - 5 + i, (term_size.columns / 2) - 10, GREEN, UNDERLINE, meses[i], RESET);
+            printf("\033[%zu;%dH%s%s%s%s", (term_size.rows / 2) - 5 + i, (term_size.columns / 2) + 10, GREEN, UNDERLINE, string, RESET);
+        }
+
+        pressione_qualquer_tecla(13);
+        menu_principal();
+        break;
+    }
+    case 1:
+        menu_principal();
+        break;
+
+    default:
+        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
+        exit(1);
+    }
+}
 void menu_livros_requisitados_por_categoria(void) {}
 void menu_livros_menos_requisitados(void) {}
 void menu_quebras(void) {}
