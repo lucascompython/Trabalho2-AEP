@@ -10,7 +10,7 @@ typedef struct
     char label[40];
     char input[40];
     int isCheckbox;
-    char checkBoxOptions[5][40];
+    char checkBoxOptions[6][40];
     // Checkbox checkbox;
 
 } Input;

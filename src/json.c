@@ -333,6 +333,9 @@ void save_emprestimos_array(Emprestimo *emprestimos, size_t size, const char *js
             strcpy(data_devolucao, "00-00-0000");
         }
 
+        yyjson_mut_val *data_emprestimo_val = yyjson_mut_strn(doc, data_emprestimo, 10);
+        yyjson_mut_val *data_devolucao_val = yyjson_mut_strn(doc, data_devolucao, 10);
+
         yyjson_mut_val *livro = yyjson_mut_obj(doc);
 
         yyjson_mut_val *isbn = yyjson_mut_strn(doc, emprestimos[i].livro->isbn, 14);
@@ -353,8 +356,8 @@ void save_emprestimos_array(Emprestimo *emprestimos, size_t size, const char *js
 
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "num_cc"), num_cc);
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "ja_devolvido"), ja_devolvido);
-        yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "data_emprestimo"), data_emprestimo);
-        yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "data_devolucao"), data_devolucao);
+        yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "data_emprestimo"), data_emprestimo_val);
+        yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "data_devolucao"), data_devolucao_val);
         yyjson_mut_obj_add(obj, yyjson_mut_str(doc, "livro"), livro);
 
         yyjson_mut_obj_add(root, key, obj);

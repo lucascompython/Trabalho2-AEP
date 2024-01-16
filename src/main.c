@@ -81,19 +81,19 @@ int contarEmprestimosPorPessoa(int *index_max_emprestimos)
     // *pessoas = (PessoaRequisicoes *)malloc(num_emprestimos * sizeof(PessoaRequisicoes));
 
     // Inicializar a matriz de pessoas
-    for (int i = 0; i < size_emprestimos; i++)
+    for (size_t i = 0; i < size_emprestimos; i++)
     {
         pessoas_requisicoes[i].num_cc = emprestimos[i].num_cc;
         pessoas_requisicoes[i].num_requisicoes = 0;
     }
 
     // Contar o número de empréstimos por pessoa
-    for (int i = 0; i < size_emprestimos; i++)
+    for (size_t i = 0; i < size_emprestimos; i++)
     {
         int num_cc = emprestimos[i].num_cc;
 
         // Encontrar a entrada correspondente em pessoas
-        for (int j = 0; j < size_emprestimos; j++)
+        for (size_t j = 0; j < size_emprestimos; j++)
         {
             if (pessoas_requisicoes[j].num_cc == num_cc)
             {
@@ -106,7 +106,7 @@ int contarEmprestimosPorPessoa(int *index_max_emprestimos)
     // Encontrar a pessoa com mais empréstimos
     int max_emprestimos = 0;
 
-    for (int i = 0; i < size_emprestimos; i++)
+    for (size_t i = 0; i < size_emprestimos; i++)
     {
         if (pessoas_requisicoes[i].num_requisicoes > max_emprestimos)
         {

@@ -212,6 +212,7 @@ void menu_introduzir_emprestimo(void)
     switch (result)
     {
     case 0:
+    {
 
         int num_cc = atoi(inputItems[0].input);
 
@@ -308,12 +309,13 @@ void menu_introduzir_emprestimo(void)
         menu_principal();
 
         break;
-
+    }
     case 1:
+    {
 
         menu_principal();
         break;
-
+    }
     default:
         fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
         exit(1);
@@ -469,315 +471,114 @@ void menu_modificar_livro(void)
     }
 }
 
-int32_t get_category_count(void)
+// int32_t get_category_count(void)
+// {
+//     int32_t categoryCount = 0;
+//     for (size_t i = 0; i < size_artigos; i++)
+//     {
+//         if ((int32_t)artigos[i].categoria > categoryCount)
+//         {
+//             categoryCount = artigos[i].categoria;
+//         }
+//     }
+//     return categoryCount + 1;
+// }
+
+void menu_quantos_livros_emprestados_por_pessoa(void)
 {
-    int32_t categoryCount = 0;
-    for (size_t i = 0; i < size_artigos; i++)
+    Input inputItems[] = {
+        {.label = "Número de CC", .input = "", .isCheckbox = 0},
+    };
+
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
+    switch (result)
     {
-        if ((int32_t)artigos[i].categoria > categoryCount)
+    case 0:
+    {
+
+        int num_cc = atoi(inputItems[0].input);
+
+        // Verificar se o utilizador tem mais de 3 livros emprestados
+        int livros_emprestados = 0;
+        for (size_t i = 0; i < size_emprestimos; i++)
         {
-            categoryCount = artigos[i].categoria;
+            if (emprestimos[i].num_cc == num_cc)
+            {
+                livros_emprestados++;
+            }
         }
+
+        clear_menu();
+        char string[40];
+        sprintf_s(string, 40, "O utilizador tem %d livros emprestados", livros_emprestados);
+        menu_centered_item(string, GREEN, UNDERLINE, 0);
+        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
+
+        pressione_qualquer_tecla(3);
+        menu_principal();
+        break;
     }
-    return categoryCount + 1;
+    case 1:
+        menu_principal();
+        break;
+
+    default:
+        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
+        exit(1);
+    }
 }
+
+void menu_livros_emprestados_entre_datas(void) {}
+void menu_pessoa_que_requisitou_mais_livros(void) {}
+void menu_livros_requisitados_em_cada_mes(void) {}
+void menu_livros_requisitados_por_categoria(void) {}
+void menu_livros_menos_requisitados(void) {}
+void menu_quebras(void) {}
 
 void menu_estatisticas(void)
 {
     char *options[] = {
-        "Stock por Categoria", // Alto e baixo preços | Quantidade maior e menor
-        "Vendas",
+        "Quantos Livros Emprestados por Pessoa",
+        "Livros Emprestados Entre Datas",
+        "Pessoa Que Requisitou Mais Livros",
+        "Livros Requisitados em Cada Mês",
+        "Livros Requisitados por Categoria",
+        "Livros Menos Requisitados",
         "Quebras", // Lixo | menu btop filtrar por categoria e total
         "Voltar"};
 
-    int32_t totalOptions = (int)LENGTH(options);
-    int32_t result = arrow_menu(options, totalOptions);
+    int totalOptions = (int)LENGTH(options);
+    int result = arrow_menu(options, totalOptions);
+
     switch (result)
     {
     case 0:
-        if (size_artigos == 0)
-        {
-            clear_menu();
-            menu_centered_item("Não há artigos para listar", UNDERLINE, "", 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-
-#ifdef __unix__ // temos que fazer isto para ler "qualquer" teclas no linux
-            enableRawMode();
-            getchar();
-            disableRawMode();
-#elif _WIN32
-            _getch(); // ler qualquer tecla no windows
-#endif
-            menu_principal();
-            return;
-        }
-        cursor_upLeft();
-        clear_menu();
-
-        int32_t categoriaCount = get_category_count();
-
-        int32_t *categoryCounts = (int32_t *)malloc(sizeof(int32_t) * categoriaCount);
-        double *categoryTotalPrices = (double *)malloc(sizeof(double) * categoriaCount);
-        if (categoryCounts == NULL || categoryTotalPrices == NULL)
-        {
-            fprintf(stderr, "Erro: malloc() retornou NULL\n");
-            exit(1);
-        }
-
-        for (int32_t i = 0; i < categoriaCount; i++)
-        {
-            categoryCounts[i] = 0;
-            categoryTotalPrices[i] = 0.0;
-        }
-        double precoTotal = 0.0;
-
-        for (size_t i = 0; i < size_artigos; i++)
-        {
-            categoryCounts[artigos[i].categoria] += artigos[i].quantidade;
-            for (uint64_t j = 0; j < artigos[i].quantidade; j++)
-            {
-                precoTotal += artigos[i].preco;
-                categoryTotalPrices[artigos[i].categoria] += artigos[i].preco;
-            }
-        }
-
-        char header[60];
-#ifdef __unix__
-        sprintf(header, "%-20s | %10s | %7s\n", "Categoria", "Quantidade", "Preço");
-#elif _WIN32
-        sprintf_s(header, 60, "%-20s | %10s | %7s\n", "Categoria", "Quantidade", "Preço");
-#endif
-        menu_centered_item(header, "", "", 0);
-
-        char linhas[60] = "----------------------|------------|---------\n";
-        menu_centered_item(linhas, "", "", 1);
-        for (int32_t i = 0; i < categoriaCount; i++)
-        {
-            char *categoriaStr = categoria_to_str(i);
-            char quantidade[40];
-            char precoCategoriaStr[40];
-            char linha[120];
-#ifdef __unix__
-            sprintf(quantidade, "%10d", categoryCounts[i]);
-            sprintf(precoCategoriaStr, "%7.2f€", categoryTotalPrices[i]);
-            sprintf(linha, "%-22s | %s | %s", categoriaStr, quantidade, precoCategoriaStr);
-#elif _WIN32
-            sprintf_s(quantidade, 40, "%10d", categoryCounts[i]);
-            sprintf_s(precoCategoriaStr, 40, "%7.2f€", categoryTotalPrices[i]);
-            sprintf_s(linha, 120, "%-22s | %s | %s", categoriaStr, quantidade, precoCategoriaStr);
-#endif
-            menu_centered_item(linha, "", "", i + 2);
-        }
-
-        menu_centered_item(linhas, "", "", categoriaCount + 2);
-        // Print total price
-        char precoTotalStr[40];
-#ifdef __unix__
-        sprintf(precoTotalStr, "Preço Total: %.2f\n", precoTotal);
-#elif _WIN32
-        sprintf_s(precoTotalStr, 40, "Preço Total: %.2f\n", precoTotal);
-#endif
-        menu_centered_item(precoTotalStr, BOLD, UNDERLINE, categoriaCount + 3);
-
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", categoriaCount + 5);
-#ifdef __unix__ // temos que fazer isto para ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-        disableRawMode();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
-        menu_principal();
-
-        free(categoryCounts);
-        free(categoryTotalPrices);
-
-        // make a table with the quantity of each category plus the total
-
+        menu_quantos_livros_emprestados_por_pessoa();
         break;
     case 1:
-    {
-
-        clear_menu();
-        // Sem tempo para fazer isto direito :(
-        if (size_artigos_vendidos == 0)
-        {
-            menu_centered_item("Não há artigos para listar", UNDERLINE, "", 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-
-#ifdef __unix__ // temos que fazer isto para ler "qualquer" teclas no linux
-            enableRawMode();
-            getchar();
-            disableRawMode();
-#elif _WIN32
-            _getch(); // ler qualquer tecla no windows
-
-#endif
-            menu_principal();
-            break;
-        }
-
-        // Calcular media de todos os artigos vendidos
-
-        double precoTotal = 0.0;
-        for (size_t i = 0; i < size_artigos_vendidos; i++)
-        {
-            precoTotal += artigos_vendidos[i].preco * artigos_vendidos[i].quantidade;
-        }
-
-        double precoMedio = precoTotal / size_artigos_vendidos;
-
-        char precoTotalStr[60];
-#ifdef __unix__
-        sprintf(precoTotalStr, "     Média dos preços dos artigos vendidos: %.2f€\n", precoMedio);
-
-#elif _WIN32
-        sprintf_s(precoTotalStr, 60, "     Média dos preços das vendas: %.2f€\n", precoMedio);
-#endif
-
-        menu_centered_item(precoTotalStr, BOLD, "", 0);
-
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-
-#ifdef __unix__ // temos que fazer isto para ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-        disableRawMode();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
-        menu_principal();
+        menu_livros_emprestados_entre_datas();
         break;
-    }
-
-    break;
     case 2:
-    {
-        clear_menu();
-        int32_t categoriaCount = get_category_count();
-
-        int32_t *categoryCounts = (int32_t *)malloc(sizeof(int32_t) * categoriaCount);
-        double *categoryTotalPrices = (double *)malloc(sizeof(double) * categoriaCount);
-        if (categoryCounts == NULL || categoryTotalPrices == NULL)
-        {
-            fprintf(stderr, "Erro: malloc() retornou NULL\n");
-            exit(1);
-        }
-
-        for (int32_t i = 0; i < categoriaCount; i++)
-        {
-            categoryCounts[i] = 0;
-            categoryTotalPrices[i] = 0.0;
-        }
-
-        for (size_t i = 0; i < size_artigos; i++)
-        {
-            categoryCounts[artigos[i].categoria] += artigos[i].quantidade;
-            for (uint64_t j = 0; j < artigos[i].quantidade; j++)
-            {
-                categoryTotalPrices[artigos[i].categoria] += artigos[i].preco;
-            }
-        }
-
-        int32_t *trashedCounts = (int32_t *)calloc(categoriaCount, sizeof(int32_t));
-
-        double trashTotal = 0.0;
-        for (int32_t i = 0; i < categoriaCount; i++)
-        {
-            double trashPercentage;
-            switch (i)
-            {
-            case 0: // Ramos
-                trashPercentage = 0.07;
-                break;
-            case 1: // Arranjos
-                trashPercentage = 0.03;
-                break;
-            default:
-                trashPercentage = 0.04;
-                break;
-            }
-            trashedCounts[i] = (int32_t)round(categoryCounts[i] * trashPercentage);
-            if (categoryCounts[i] != 0)
-            {
-                trashTotal += trashedCounts[i] * categoryTotalPrices[i] / categoryCounts[i];
-            }
-        }
-
-        // Print the header of the table
-        char header[60];
-#ifdef __unix__
-        sprintf(header, "%-20s | %10s | %7s\n", "Categoria", "Quantidade", "Desperdício");
-#elif _WIN32
-        sprintf_s(header, 60, "%-20s | %10s | %7s\n", "Categoria", "Quantidade", "Desperdício");
-#endif
-        menu_centered_item(header, "", "", 0);
-
-        // Print the line separator
-        char linhas[60];
-#ifdef __unix__
-        sprintf(linhas, "--------------------|------------|------------\n");
-#elif _WIN32
-        sprintf_s(linhas, 60, "--------------------|------------|------------\n");
-#endif
-        menu_centered_item(linhas, "", "", 1);
-
-        // Print each category with its count and total price
-        for (int32_t i = 0; i < categoriaCount; i++)
-        {
-            char *categoriaStr = categoria_to_str(i);
-            char quantidade[40];
-            char desperdicio[40];
-            char linha[120];
-#ifdef __unix__
-            sprintf(quantidade, "%10d", categoryCounts[i]);
-            sprintf(desperdicio, "%10d", trashedCounts[i]);
-            sprintf(linha, "%-17s | %s | %s", categoriaStr, quantidade, desperdicio);
-#elif _WIN32
-            sprintf_s(quantidade, 40, "%10d", categoryCounts[i]);
-            sprintf_s(desperdicio, 40, "%10d", trashedCounts[i]);
-            sprintf_s(linha, 120, "%-17s | %s | %s", categoriaStr, quantidade, desperdicio);
-#endif
-            menu_centered_item(linha, "", "", i + 2);
-        }
-
-        menu_centered_item(linhas, "", "", categoriaCount + 2);
-
-        // Print total estimated loss
-        char perdaEstimadaStr[40];
-#ifdef __unix__
-        sprintf(perdaEstimadaStr, "Perda Estimada: %.2f€\n", trashTotal);
-#elif _WIN32
-        sprintf_s(perdaEstimadaStr, 40, "Perda Estimada: %.2f€\n", trashTotal);
-#endif
-        menu_centered_item(perdaEstimadaStr, BOLD, UNDERLINE, categoriaCount + 3);
-
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", categoriaCount + 5);
-#ifdef __unix__ // temos que fazer isto para ler "qualquer" teclas no linux
-        enableRawMode();
-        getchar();
-        disableRawMode();
-#elif _WIN32
-        _getch(); // ler qualquer tecla no windows
-#endif
-        menu_principal();
-
-        free(categoryCounts);
-        free(categoryTotalPrices);
-
-        // make a table with the quantity of each category plus the total
-
-        free(trashedCounts);
+        menu_pessoa_que_requisitou_mais_livros();
         break;
-    }
-
     case 3:
+        menu_livros_requisitados_em_cada_mes();
+        break;
+    case 4:
+        menu_livros_requisitados_por_categoria();
+        break;
+    case 5:
+        menu_livros_menos_requisitados();
+        break;
+    case 6:
+        menu_quebras();
+        break;
+    case 7:
         menu_principal();
         break;
     default:
         fprintf(stderr, "Erro: arrow_menu() retornou %d\n", result);
         exit(1);
-        break;
     }
 }
 
@@ -838,6 +639,7 @@ void mudar_data(void)
     switch (result)
     {
     case 0:
+    {
         int dia = atoi(inputItems[0].input);
         int mes = atoi(inputItems[1].input);
         int ano = atoi(inputItems[2].input);
@@ -869,6 +671,7 @@ void mudar_data(void)
         menu_principal();
 
         break;
+    }
     case 1:
         menu_principal();
         break;
@@ -888,6 +691,7 @@ void menu_resgistrar_devolucao(void)
     switch (result)
     {
     case 0:
+    {
 
         int num_cc = atoi(inputItems[0].input);
 
@@ -978,7 +782,7 @@ void menu_resgistrar_devolucao(void)
         menu_centered_item("Devolução registada com sucesso!", GREEN, UNDERLINE, 0);
         menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
         pressione_qualquer_tecla(3);
-
+    }
     case 1:
         menu_principal();
         break;
@@ -999,7 +803,7 @@ void menu_principal(void)
         "Listar Livros (ISBN)",
         "Modificar Livro",
         "Estatisticas",
-        "Mudar Data"
+        "Mudar Data",
         "Sair"};
 
     int totalOptions = (int)LENGTH(options);
