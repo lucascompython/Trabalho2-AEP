@@ -320,7 +320,7 @@ void menu_introduzir_emprestimo(void)
     }
 }
 
-void menu_listar(void)
+void menu_listar_livros(void)
 {
 
     if (size_livros == 0)
@@ -1034,7 +1034,7 @@ void menu_principal(void)
         menu_introduzir_emprestimo();
         break;
     case 2:
-        menu_listar();
+        menu_listar_livros();
         break;
     case 3:
         menu_modificar();
