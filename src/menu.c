@@ -19,12 +19,13 @@
 #define sprintf_s(buffer, size, format, ...) sprintf(buffer, format, __VA_ARGS__)
 #endif
 
-extern TerminalSize term_size;     // from src/main.c
-extern Livro *livros;              // from src/main.c
-extern size_t size_livros;         // from src/main.c
-extern Emprestimo *emprestimos;    // from src/main.c
-extern size_t size_emprestimos;    // from src/main.c
-extern struct tm current_datetime; // from src/main.c
+extern TerminalSize term_size;                 // from src/main.c
+extern Livro *livros;                          // from src/main.c
+extern size_t size_livros;                     // from src/main.c
+extern Emprestimo *emprestimos;                // from src/main.c
+extern size_t size_emprestimos;                // from src/main.c
+extern struct tm current_datetime;             // from src/main.c
+extern PessoaRequisicoes *pessoas_requisicoes; // from src/main.c
 
 void pressione_qualquer_tecla(int row_offset)
 {
@@ -259,7 +260,7 @@ void menu_introduzir_emprestimo(void)
         if (livros_emprestados >= 3)
         {
             clear_menu();
-            menu_centered_item("O utilizador já tem 3 livros emprestados!", RED, UNDERLINE, 0);
+            menu_centered_item("O utilizador já tem 3 ou mais livros emprestados!", RED, UNDERLINE, 0);
             menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
             pressione_qualquer_tecla(3);
@@ -270,7 +271,9 @@ void menu_introduzir_emprestimo(void)
         size_emprestimos++;
 
         emprestimos = realloc(emprestimos, sizeof(Emprestimo) * (size_emprestimos));
-        if (emprestimos == NULL)
+        pessoas_requisicoes = realloc(pessoas_requisicoes, sizeof(PessoaRequisicoes) * (size_emprestimos));
+
+        if (emprestimos == NULL || pessoas_requisicoes == NULL)
         {
             fprintf(stderr, "Erro: realloc() retornou NULL\n");
             exit(1);
@@ -278,6 +281,23 @@ void menu_introduzir_emprestimo(void)
 
         emprestimos[size_emprestimos - 1].num_cc = num_cc;
         emprestimos[size_emprestimos - 1].livro = &livros[livroIndex];
+        emprestimos[size_emprestimos - 1].ja_devolvido = 0;
+        emprestimos[size_emprestimos - 1].data_emprestimo = current_datetime;
+        // guardar a data de de devolução como 00-00-0000
+        struct tm data_devolucao = {0};
+        int dia, mes, ano;
+        sscanf("00-00-0000", "%d-%d-%d", &dia, &mes, &ano);
+        data_devolucao.tm_mday = dia;
+        data_devolucao.tm_mon = mes - 1;
+        data_devolucao.tm_year = ano - 1900;
+        emprestimos[size_emprestimos - 1].data_devolucao = data_devolucao;
+
+        copy_str(emprestimos[size_emprestimos - 1].uuid, uuid_gen(), 37);
+
+        livros[livroIndex].quantidade_disponivel--;
+        livros[livroIndex].num_requisicoes++;
+
+        save_livros_array(livros, size_livros, STOCK_JSON_FILE);
 
         clear_menu();
         menu_centered_item("Emprestimo introduzido com sucesso!", GREEN, UNDERLINE, 0);
@@ -287,9 +307,10 @@ void menu_introduzir_emprestimo(void)
 
         menu_principal();
 
-        break; // fazer case1
+        break;
 
     case 1:
+
         menu_principal();
         break;
 

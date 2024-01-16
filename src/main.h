@@ -23,6 +23,7 @@ typedef struct
   char *autor;
   int quantidade_exemplares;
   int quantidade_disponivel;
+  int num_requisicoes;
   CategoriaLivro categoria;
 
 } Livro;
@@ -36,5 +37,13 @@ typedef struct
   struct tm data_emprestimo;
   struct tm data_devolucao;
 } Emprestimo;
+
+typedef struct
+{
+  int num_cc;
+  int num_requisicoes;
+} PessoaRequisicoes;
+
+int contarEmprestimosPorPessoa(int *index_max_emprestimos);
 
 #endif
