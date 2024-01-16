@@ -718,33 +718,6 @@ void menu_livros_requisitados_em_cada_mes(void)
         }
 
         clear_menu();
-        // char string[70];
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Janeiro", livros_requisitados[0]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 0);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Fevereiro", livros_requisitados[1]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 1);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Março", livros_requisitados[2]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 2);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Abril", livros_requisitados[3]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 3);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Maio", livros_requisitados[4]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 4);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Junho", livros_requisitados[5]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 5);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Julho", livros_requisitados[6]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 6);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Agosto", livros_requisitados[7]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 7);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Setembro", livros_requisitados[8]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 8);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Outubro", livros_requisitados[9]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 9);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Novembro", livros_requisitados[10]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 10);
-        // sprintf_s(string, 70, "Foram requisitados %d livros em Dezembro", livros_requisitados[11]);
-        // menu_centered_item(string, GREEN, UNDERLINE, 11);
-
-        // fazer tabela
 
         char *meses[] = {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
                          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"};
