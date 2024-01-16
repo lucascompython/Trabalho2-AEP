@@ -345,6 +345,7 @@ void menu_listar(void)
         char autor[40];
         char quantidade_e[40];
         char quantidade_d[40];
+        char num_requisicoes[40];
         char categoria[40];
 
         sprintf_s(isbn, 40, "ISBN: %s", livros[result].isbn);
@@ -352,6 +353,7 @@ void menu_listar(void)
         sprintf_s(autor, 40, "Autor: %s", livros[result].autor);
         sprintf_s(quantidade_e, 40, "Quantidade Exemplares: %d", livros[result].quantidade_exemplares);
         sprintf_s(quantidade_d, 40, "Quantidade Disponível: %d", livros[result].quantidade_disponivel);
+        sprintf_s(num_requisicoes, 40, "Requisições: %d", livros[result].num_requisicoes);
         sprintf_s(categoria, 40, "Categoria: %s", categoria_to_str(livros[result].categoria));
 
         // TODO: Centrar isto melhor verticalmente
