@@ -197,9 +197,8 @@ void menu_introduzir_livro(void)
 
         clear_menu();
         menu_centered_item("Livro introduzido com sucesso!", GREEN, UNDERLINE, 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-        pressione_qualquer_tecla(3);
+        pressione_qualquer_tecla(2);
 
         menu_principal();
 
@@ -241,9 +240,8 @@ void menu_introduzir_emprestimo(void)
         {
             clear_menu();
             menu_centered_item("Livro não encontrado!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             menu_principal();
             break;
         }
@@ -253,9 +251,8 @@ void menu_introduzir_emprestimo(void)
         {
             clear_menu();
             menu_centered_item("Livro não disponivel!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             menu_principal();
             break;
         }
@@ -273,9 +270,8 @@ void menu_introduzir_emprestimo(void)
         {
             clear_menu();
             menu_centered_item("O utilizador já tem 3 ou mais livros emprestados!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             menu_principal();
             break;
         }
@@ -314,9 +310,8 @@ void menu_introduzir_emprestimo(void)
 
         clear_menu();
         menu_centered_item("Emprestimo introduzido com sucesso!", GREEN, UNDERLINE, 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-        pressione_qualquer_tecla(3);
+        pressione_qualquer_tecla(2);
 
         menu_principal();
 
@@ -524,9 +519,8 @@ void menu_quantos_livros_emprestados_por_pessoa(void)
         char string[40];
         sprintf_s(string, 40, "O utilizador tem %d livros emprestados", livros_emprestados);
         menu_centered_item(string, GREEN, UNDERLINE, 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-        pressione_qualquer_tecla(3);
+        pressione_qualquer_tecla(2);
         menu_principal();
         break;
     }
@@ -660,9 +654,8 @@ void mudar_data(void)
         {
             clear_menu();
             menu_centered_item("Data inválida!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             mudar_data();
             return;
         }
@@ -676,9 +669,8 @@ void mudar_data(void)
 
         clear_menu();
         menu_centered_item("Data alterada com sucesso!", GREEN, UNDERLINE, 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-        pressione_qualquer_tecla(3);
+        pressione_qualquer_tecla(2);
 
         menu_principal();
 
@@ -721,9 +713,8 @@ void menu_resgistrar_devolucao(void)
         {
             clear_menu();
             menu_centered_item("Livro não encontrado!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             menu_principal();
             break;
         }
@@ -742,9 +733,8 @@ void menu_resgistrar_devolucao(void)
         {
             clear_menu();
             menu_centered_item("Utilizador não encontrado!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             menu_principal();
             break;
         }
@@ -763,9 +753,8 @@ void menu_resgistrar_devolucao(void)
         {
             clear_menu();
             menu_centered_item("O utilizador não tem o livro emprestado!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             menu_principal();
             break;
         }
@@ -775,9 +764,8 @@ void menu_resgistrar_devolucao(void)
         {
             clear_menu();
             menu_centered_item("O livro já foi devolvido!", RED, UNDERLINE, 0);
-            menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
 
-            pressione_qualquer_tecla(3);
+            pressione_qualquer_tecla(2);
             menu_principal();
             break;
         }
@@ -792,8 +780,7 @@ void menu_resgistrar_devolucao(void)
 
         clear_menu();
         menu_centered_item("Devolução registada com sucesso!", GREEN, UNDERLINE, 0);
-        menu_centered_item("Pressione qualquer tecla para continuar", UNDERLINE, "", 1);
-        pressione_qualquer_tecla(3);
+        pressione_qualquer_tecla(2);
     }
     case 1:
         menu_principal();
