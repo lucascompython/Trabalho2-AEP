@@ -50,30 +50,6 @@ void welcome_screen(void)
     menu_principal();
 }
 
-/*
-Introduzir informação de um livro
-Introduzir um emprestimo
-Modificar a informação de um livro
-Registar a devolução de um livro
-
-Mudar a data (atual) do sistema
-
-
-Estatisticas
- - Informação de um livro pelo ISBN (como tabela antiga AKA mostrar tudo)
-//  - Ver quantos livros estão emprestados por um utilizador
- - Tabela clientes (mostrar por utilizador, livros requisitados, livros devolvidos, livros emprestados)
- -
-
- - Quantos livros foram emprestados entre duas datas, e quantos foram devolvidos
- - Apresenter a informação da pessoa que requisitou mais livros e quantos ja devolveu (talvez tabela com todos os utilizadores por ordem decrescente)
- - Apresenter quantidade de livros requisitados, por mes de um dado ano
- - Apresentar a informação dos livros menos requisitados
- - Estragos
-
-
-*/
-
 int contarEmprestimosPorPessoa(int *index_max_emprestimos)
 {
 
@@ -125,6 +101,8 @@ int main(void)
 
 #ifdef _WIN32
     srand((unsigned int)time(NULL)); // seed para o uuid_gen() no Windows
+    menu_centered_item("AVISO: Infelizmente este programa não foi testado no Windows.\nPor favor use Linux :)", RED, BOLD, 0);
+    pressione_qualquer_tecla(2);
 #endif
     hide_cursor();
 

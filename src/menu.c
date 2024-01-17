@@ -524,19 +524,6 @@ void menu_modificar_livro(void)
     }
 }
 
-// int32_t get_category_count(void)
-// {
-//     int32_t categoryCount = 0;
-//     for (size_t i = 0; i < size_artigos; i++)
-//     {
-//         if ((int32_t)artigos[i].categoria > categoryCount)
-//         {
-//             categoryCount = artigos[i].categoria;
-//         }
-//     }
-//     return categoryCount + 1;
-// }
-
 void menu_quantos_livros_emprestados_por_pessoa(void)
 {
     Input inputItems[] = {
@@ -628,20 +615,19 @@ void menu_livros_emprestados_entre_datas(void)
 
         int livros_emprestados = 0;
         int livros_devolvidos = 0;
+
+        time_t data1 = mktime(&emprestimos[0].data_emprestimo);
+        time_t data2 = mktime(&emprestimos[0].data_emprestimo);
+
         for (size_t i = 0; i < size_emprestimos; i++)
         {
-            if (emprestimos[i].data_emprestimo.tm_year + 1900 >= ano1 && emprestimos[i].data_emprestimo.tm_year + 1900 <= ano2)
+            time_t data_emprestimo = mktime(&emprestimos[i].data_emprestimo);
+            if (data_emprestimo >= data1 && data_emprestimo <= data2)
             {
-                if (emprestimos[i].data_emprestimo.tm_mon + 1 >= mes1 && emprestimos[i].data_emprestimo.tm_mon + 1 <= mes2)
+                livros_emprestados++;
+                if (emprestimos[i].ja_devolvido == 1)
                 {
-                    if (emprestimos[i].data_emprestimo.tm_mday >= dia1 && emprestimos[i].data_emprestimo.tm_mday <= dia2)
-                    {
-                        livros_emprestados++;
-                        if (emprestimos[i].ja_devolvido == 1)
-                        {
-                            livros_devolvidos++;
-                        }
-                    }
+                    livros_devolvidos++;
                 }
             }
         }

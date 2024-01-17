@@ -200,8 +200,8 @@ Emprestimo *get_emprestimos_array(size_t *size_emprestimos, const char *json_fil
         const char *data_emprestimo_str = yyjson_get_str(yyjson_obj_get(val, "data_emprestimo"));
         const char *data_devolucao_str = yyjson_get_str(yyjson_obj_get(val, "data_devolucao"));
 
-        struct tm data_emprestimo;
-        struct tm data_devolucao;
+        struct tm data_emprestimo = {0};
+        struct tm data_devolucao = {0};
 
         // strptime deixou de ser standard em C11
         int d, m, y;
