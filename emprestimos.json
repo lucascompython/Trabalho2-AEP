@@ -1,7 +1,7 @@
 {
     "141c1607-45e4-4213-88e1-dc505105761f": {
         "num_cc": 15063599,
-        "ja_devolvido": 1,
+        "ja_devolvido": 0,
         "data_emprestimo": "16-01-2024",
         "data_devolucao": "16-01-2024",
         "livro": {
@@ -16,7 +16,7 @@
     },
     "bdc95ccf-8e52-472f-a3be-c11befaaa0b9": {
         "num_cc": 15063599,
-        "ja_devolvido": 1,
+        "ja_devolvido": 0,
         "data_emprestimo": "16-01-2024",
         "data_devolucao": "16-01-2024",
         "livro": {
@@ -31,7 +31,7 @@
     },
     "0cb1334a-6c65-4ca0-bdb3-160ee39d0906": {
         "num_cc": 99999999,
-        "ja_devolvido": 1,
+        "ja_devolvido": 0,
         "data_emprestimo": "16-01-2024",
         "data_devolucao": "16-01-2024",
         "livro": {
@@ -42,6 +42,126 @@
             "quantidade_disponivel": 57,
             "num_requisicoes": 14,
             "categoria": "Ficção"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9b": {
+        "num_cc": 99999999,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "7777777777777",
+            "titulo": "Star Wars 2",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9c": {
+        "num_cc": 99999999,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "8888888888888",
+            "titulo": "Star Wars 3",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9d": {
+        "num_cc": 99999999,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "9999999999999",
+            "titulo": "Star Wars 4",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9e": {
+        "num_cc": 99999999,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "1010101010101",
+            "titulo": "Star Wars 5",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9f": {
+        "num_cc": 99999999,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "1111111111111",
+            "titulo": "Star Wars 6",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9g": {
+        "num_cc": 99999999,
+        "ja_devolvido": 0,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "1212121212121",
+            "titulo": "Star Wars 7",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9h": {
+        "num_cc": 99999999,
+        "ja_devolvido": 1,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "1313131313131",
+            "titulo": "Star Wars 8",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
+        }
+    },
+    "c0b4b6a9-5b9e-4b9e-9b9a-9b9b9b9b9b9i": {
+        "num_cc": 99999999,
+        "ja_devolvido": 1,
+        "data_emprestimo": "16-01-2024",
+        "data_devolucao": "16-01-2024",
+        "livro": {
+            "isbn": "1414141414141",
+            "titulo": "Star Wars 9",
+            "autor": "George Lukas",
+            "quantidade_exemplares": 5,
+            "quantidade_disponivel": 2,
+            "num_requisicoes": 3,
+            "categoria": "Terror"
         }
     }
 }

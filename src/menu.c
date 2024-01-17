@@ -852,7 +852,127 @@ void menu_livros_menos_requisitados(void)
     pressione_qualquer_tecla(7);
     menu_principal();
 }
-void menu_quebras(void) {}
+
+typedef struct
+{
+    int num_estragados;
+    int index;
+} LivroEstragados;
+
+int compare2(const void *a, const void *b)
+{
+    // ordem decrescente
+    LivroEstragados *a1 = (LivroEstragados *)a;
+    LivroEstragados *b1 = (LivroEstragados *)b;
+
+    if (a1->num_estragados == b1->num_estragados)
+        return 0;
+    else if (a1->num_estragados < b1->num_estragados)
+        return 1;
+    else
+        return -1;
+}
+
+void menu_quebras(void)
+{
+
+    if (size_emprestimos == 0)
+    {
+        clear_menu();
+        menu_centered_item("Não há livros requisitados", UNDERLINE, "", 0);
+
+        pressione_qualquer_tecla(2);
+        menu_principal();
+        return;
+    }
+
+    Input inputItems[] = {
+        {.label = "Ano", .input = "", .isCheckbox = 0},
+    };
+
+    int result = input_menu(inputItems, LENGTH(inputItems), 0);
+    switch (result)
+    {
+    case 0:
+    {
+        int ano = atoi(inputItems[0].input);
+
+        if (verificar_data(1, 1, ano) == 0)
+        {
+            clear_menu();
+            menu_centered_item("Data inválida!", RED, UNDERLINE, 0);
+
+            pressione_qualquer_tecla(2);
+            menu_quebras();
+            return;
+        }
+
+        int livros_emprestados = 0;
+        for (size_t i = 0; i < size_emprestimos; i++)
+        {
+            if (emprestimos[i].data_emprestimo.tm_year + 1900 == ano)
+            {
+                livros_emprestados++;
+            }
+        }
+
+        float num_livros_estragados = ((float)livros_emprestados * 0.02);
+
+        clear_menu();
+        char string[70];
+        sprintf_s(string, 70, "Dos %d livros emprestados em %d, %.4f foram estragados", livros_emprestados, ano, num_livros_estragados);
+        menu_centered_item(string, GREEN, UNDERLINE, 0);
+
+        LivroEstragados *livros_estragados = (LivroEstragados *)malloc(sizeof(LivroEstragados) * size_livros);
+
+        for (size_t i = 0; i < size_livros; i++)
+        {
+            livros_estragados[i].num_estragados = (int)(livros[i].quantidade_exemplares * 0.02);
+            livros_estragados[i].index = i;
+        }
+
+        qsort(livros_estragados, size_livros, sizeof(LivroEstragados), compare2);
+
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 7, (term_size.columns / 2) - 27, MAGENTA, UNDERLINE, "Informação dos livro com mais exemplares estragados", RESET);
+
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 5, (term_size.columns / 2) - 35, GREEN, UNDERLINE, "Título", RESET);
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 5, (term_size.columns / 2) - 20, GREEN, UNDERLINE, "Autor", RESET);
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 5, (term_size.columns / 2) - 5, GREEN, UNDERLINE, "Categoria", RESET);
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 5, (term_size.columns / 2) + 10, GREEN, UNDERLINE, "ISBN", RESET);
+        printf("\033[%d;%dH%s%s%s%s", (term_size.rows / 2) - 5, (term_size.columns / 2) + 25, GREEN, UNDERLINE, "Exemplares", RESET);
+
+        for (size_t i = 0; i < 3; i++)
+        {
+            char string[70];
+            sprintf_s(string, 70, "%s", livros[livros_estragados[i].index].titulo);
+            printf("\033[%zu;%dH%s", (term_size.rows / 2) - 4 + i, (term_size.columns / 2) - 35, string);
+
+            sprintf_s(string, 70, "%s", livros[livros_estragados[i].index].autor);
+            printf("\033[%zu;%dH%s", (term_size.rows / 2) - 4 + i, (term_size.columns / 2) - 20, string);
+
+            sprintf_s(string, 70, "%s", categoria_to_str(livros[livros_estragados[i].index].categoria));
+            printf("\033[%zu;%dH%s", (term_size.rows / 2) - 4 + i, (term_size.columns / 2) - 5, string);
+
+            sprintf_s(string, 70, "%s", livros[livros_estragados[i].index].isbn);
+            printf("\033[%zu;%dH%s", (term_size.rows / 2) - 4 + i, (term_size.columns / 2) + 10, string);
+
+            sprintf_s(string, 70, "%.2f", livros[livros_estragados[i].index].quantidade_exemplares * 0.02);
+            printf("\033[%zu;%dH%s", (term_size.rows / 2) - 4 + i, (term_size.columns / 2) + 25, string);
+        }
+
+        pressione_qualquer_tecla(7);
+        menu_principal();
+        break;
+    }
+    case 1:
+        menu_principal();
+        break;
+
+    default:
+        fprintf(stderr, "Erro: input_menu() retornou %d\n", result);
+        exit(1);
+    }
+}
 
 void menu_estatisticas(void)
 {

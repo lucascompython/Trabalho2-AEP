@@ -2,7 +2,7 @@
     "1111111111111": {
         "titulo": "Star Wars 1",
         "autor": "George Lucas",
-        "quantidade_exemplares": 10,
+        "quantidade_exemplares": 420,
         "quantidade_disponivel": 10,
         "num_requisicoes": 6,
         "categoria": "Ficção"
@@ -10,7 +10,7 @@
     "2222222222222": {
         "titulo": "Star Wars 2",
         "autor": "George Lucas",
-        "quantidade_exemplares": 20,
+        "quantidade_exemplares": 400,
         "quantidade_disponivel": 20,
         "num_requisicoes": 7,
         "categoria": "Ficção"
@@ -18,7 +18,7 @@
     "3333333333333": {
         "titulo": "Star Wars 3",
         "autor": "George Lucas",
-        "quantidade_exemplares": 30,
+        "quantidade_exemplares": 380,
         "quantidade_disponivel": 30,
         "num_requisicoes": 8,
         "categoria": "Ficção"
